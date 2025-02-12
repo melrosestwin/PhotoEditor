@@ -2,8 +2,6 @@
 //  PhotoEditorApp.swift
 //  PhotoEditor
 //
-//  Created by Николай Гарчу on 12.02.2025.
-//
 
 import SwiftUI
 
@@ -11,7 +9,7 @@ import SwiftUI
 struct PhotoEditorApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            OnboardingView(isFirstLaunch: .constant(false))
         }
     }
 }
