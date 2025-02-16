@@ -8,6 +8,7 @@ import SwiftUI
 struct MainView: View {
     
     @State private var selectedItem: Athlete = .soccer
+    @State private var showEditorTutorial: Bool = true
     
     var body: some View {
         NavigationStack {
@@ -52,6 +53,15 @@ struct MainView: View {
                     .scaledToFill()
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .ignoresSafeArea()
+            }
+            .overlay {
+                if showEditorTutorial {
+                    EditorTutorialView {
+                        withAnimation {
+                            showEditorTutorial = false
+                        }
+                    }
+                }
             }
         }
     }

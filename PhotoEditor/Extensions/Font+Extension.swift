@@ -2,9 +2,6 @@
 //  Font+Extension.swift
 //  PhotoEditor
 //
-//  Created by Николай Гарчу on 12.02.2025.
-//
-
 
 import SwiftUI
 
