@@ -105,7 +105,7 @@ struct OnboardingView: View {
                     }
                 }
             } label: {
-                Image(.onboardingNext)
+                Image(.rightArrow)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 70.adaptive(), height: 70.adaptive())

@@ -38,6 +38,8 @@
 		ED426AFC2D5D3D0D00D92CB3 /* Font+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED426AFB2D5D3D0D00D92CB3 /* Font+Extension.swift */; };
 		ED426AFE2D5D3F8800D92CB3 /* MazzardH-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = ED426AFD2D5D3F8800D92CB3 /* MazzardH-Bold.otf */; };
 		ED426B012D5D3FEB00D92CB3 /* YellowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED426B002D5D3FEB00D92CB3 /* YellowButton.swift */; };
+		ED8382C82D6253AC006CAC70 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8382C72D6253AC006CAC70 /* MainView.swift */; };
+		ED8382CA2D62763F006CAC70 /* AthleteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8382C92D62763F006CAC70 /* AthleteModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +76,8 @@
 		ED426AFB2D5D3D0D00D92CB3 /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
 		ED426AFD2D5D3F8800D92CB3 /* MazzardH-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MazzardH-Bold.otf"; sourceTree = "<group>"; };
 		ED426B002D5D3FEB00D92CB3 /* YellowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YellowButton.swift; sourceTree = "<group>"; };
+		ED8382C72D6253AC006CAC70 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		ED8382C92D62763F006CAC70 /* AthleteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleteModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +114,7 @@
 				ED426AAB2D5D2C8A00D92CB3 /* Configuration */,
 				ED426AAA2D5D2C8600D92CB3 /* App */,
 				ED426AA92D5D2C7900D92CB3 /* Resources */,
+				ED426AFF2D5D3FDC00D92CB3 /* Customs */,
 				ED426AE52D5D317700D92CB3 /* Extensions */,
 			);
 			path = PhotoEditor;
@@ -127,7 +132,7 @@
 		ED426AAA2D5D2C8600D92CB3 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				ED426AFF2D5D3FDC00D92CB3 /* Customs */,
+				ED8382C62D625366006CAC70 /* Main */,
 				ED426AAC2D5D2CE000D92CB3 /* Onboarding */,
 			);
 			path = App;
@@ -212,6 +217,15 @@
 				ED426B002D5D3FEB00D92CB3 /* YellowButton.swift */,
 			);
 			path = Customs;
+			sourceTree = "<group>";
+		};
+		ED8382C62D625366006CAC70 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				ED8382C92D62763F006CAC70 /* AthleteModel.swift */,
+				ED8382C72D6253AC006CAC70 /* MainView.swift */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -306,9 +320,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED426AE72D5D317700D92CB3 /* Adaptation.swift in Sources */,
+				ED8382C82D6253AC006CAC70 /* MainView.swift in Sources */,
 				ED426AE82D5D317700D92CB3 /* LinearGradient.swift in Sources */,
 				ED426AF72D5D329200D92CB3 /* OnboardingItem.swift in Sources */,
 				ED426AF32D5D323200D92CB3 /* ScreenSize.swift in Sources */,
+				ED8382CA2D62763F006CAC70 /* AthleteModel.swift in Sources */,
 				ED426AE92D5D317700D92CB3 /* IdentifiableItem.swift in Sources */,
 				ED426AFC2D5D3D0D00D92CB3 /* Font+Extension.swift in Sources */,
 				ED426AEB2D5D317700D92CB3 /* Color+Extension.swift in Sources */,
