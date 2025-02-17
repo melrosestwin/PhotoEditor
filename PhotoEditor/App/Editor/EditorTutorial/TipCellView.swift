@@ -7,7 +7,7 @@ import SwiftUI
 
 struct TipCellView: View {
     
-    let tip: EditorTip
+    let tip: TutorialTip
     let onClose: () -> Void
     let onNext: () -> Void
     
@@ -26,10 +26,10 @@ struct TipCellView: View {
                 
                 VStack(spacing: 0) {
                     (
-                    Text(tip.colorfultText)
+                    Text(tip.titleText)
                         .font(.poppins(24.adaptive(), weight: .bold))
                         .foregroundColor(.lightYellow) +
-                    Text(tip.simpleText)
+                    Text(tip.descriptionText)
                         .font(.poppins(16.adaptive()))
                         .foregroundColor(.white)
                     )

@@ -7,33 +7,29 @@ import SwiftUI
 
 struct EditorTutorialView: View {
     
-    @State private var selectedTip: EditorTip = .welcome
+    @State private var selectedIndex: Int = 0
     
+    let tips: [TutorialTip]
     let onDismiss: () -> Void
     
     var body: some View {
         VStack {
             Spacer()
             
-            TabView(selection: $selectedTip) {
-                ForEach(EditorTip.allCases, id: \.self) { tip in
-                    TipCellView(tip: tip, onClose: onDismiss) {
-                        switch tip {
-                        case .welcome: selectedTip = .sections
-                        case .sections: selectedTip = .tools
-                        case .tools: selectedTip = .selection
-                        case .selection: selectedTip = .generation
-                        case .generation: selectedTip = .addition
-                        case .addition: selectedTip = .background
-                        case .background: selectedTip = .ready
-                        default: break
+            TabView(selection: $selectedIndex) {
+                ForEach(0..<tips.count, id: \.self) { index in
+                    TipCellView(tip: tips[index], onClose: onDismiss) {
+                        if selectedIndex < tips.count - 1 {
+                            selectedIndex += 1
+                        } else {
+                            onDismiss()
                         }
                     }
                     .padding(.horizontal, 40.adaptive())
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .animation(.default, value: selectedTip)
+            .animation(.default, value: selectedIndex)
             .highPriorityGesture(DragGesture())
             
             Spacer()
@@ -47,7 +43,7 @@ struct EditorTutorialView: View {
 }
 
 #Preview {
-    EditorTutorialView {
+    EditorTutorialView(tips: TutorialTip.editorTips) {
         
     }
 }

@@ -56,7 +56,7 @@ struct MainView: View {
             }
             .overlay {
                 if showEditorTutorial {
-                    EditorTutorialView {
+                    EditorTutorialView(tips: TutorialTip.editorTips) {
                         withAnimation {
                             showEditorTutorial = false
                         }

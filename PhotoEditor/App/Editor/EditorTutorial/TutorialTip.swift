@@ -15,7 +15,9 @@ enum TutorialTip: Int, CaseIterable {
     case background
     case ready
     
-    
+    case mainPage
+    case libraryCreate
+    case libraryEdit
     
     var banner: ImageResource {
         switch self {
@@ -27,10 +29,14 @@ enum TutorialTip: Int, CaseIterable {
         case .addition: .tipBanner6
         case .background: .tipBanner7
         case .ready: .tipBanner8
+            
+        case .mainPage: .tipBanner9
+        case .libraryCreate: .tipBanner10
+        case .libraryEdit: .tipBanner11
         }
     }
     
-    var colorfultText: String {
+    var titleText: String {
         switch self {
         case .welcome: "Welcome "
         case .sections: "Sections: "
@@ -40,10 +46,12 @@ enum TutorialTip: Int, CaseIterable {
         case .addition: "Addition: "
         case .background: "Background: "
         case .ready: "Ready "
+            
+        case .mainPage, .libraryCreate, .libraryEdit: "Tip: "
         }
     }
     
-    var simpleText: String {
+    var descriptionText: String {
         switch self {
         case .welcome: "to the AI ​​Sports Photo Card Maker tutorial! Let me introduce you to the tools."
         case .sections: "The editor has 4 sections: changing clothes, removing background, adding objects, changing size."
@@ -53,6 +61,10 @@ enum TutorialTip: Int, CaseIterable {
         case .addition: "Select the area, describe it and click \"Generate\" to insert a new object into this area of ​​the photo card."
         case .background: "The background is automatically selected and replaced with a color, pattern or generation."
         case .ready: "to create unique photo cards? Click \"Start\" and get started!"
+            
+        case .mainPage: "Create your own unique sports card with AI!\nFirst, choose the sport you want your photo card to be in style!"
+        case .libraryCreate: "To create a new photo card, click on the empty frame with a \"+\". Or choose a ready-made template and start by simply clicking on it!"
+        case .libraryEdit: "To edit, download or delete an existing card, click on the corresponding button in the right corner of the frame"
         }
     }
     
@@ -64,6 +76,11 @@ enum TutorialTip: Int, CaseIterable {
         .generation,
         .addition,
         .background,
-        .ready,
+        .ready
+    ]
+    
+    static let libraryTips: [TutorialTip] = [
+        .libraryCreate,
+        .libraryEdit
     ]
 }
