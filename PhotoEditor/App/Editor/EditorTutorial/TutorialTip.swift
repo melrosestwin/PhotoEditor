@@ -1,11 +1,11 @@
 //
-//  EditorTip.swift
+//  TutorialTip.swift
 //  PhotoEditor
 //
 
 import SwiftUI
 
-enum EditorTip: Int, CaseIterable {
+enum TutorialTip: Int, CaseIterable {
     case welcome
     case sections
     case tools
@@ -14,6 +14,8 @@ enum EditorTip: Int, CaseIterable {
     case addition
     case background
     case ready
+    
+    
     
     var banner: ImageResource {
         switch self {
@@ -53,4 +55,15 @@ enum EditorTip: Int, CaseIterable {
         case .ready: "to create unique photo cards? Click \"Start\" and get started!"
         }
     }
+    
+    static let editorTips: [TutorialTip] = [
+        .welcome,
+        .sections,
+        .tools,
+        .selection,
+        .generation,
+        .addition,
+        .background,
+        .ready,
+    ]
 }
