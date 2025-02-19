@@ -7,19 +7,10 @@ import SwiftUI
 
 extension LinearGradient {
     
-    static let brandBackground = LinearGradient(
+    static let yellow = LinearGradient(
         colors: [
-            Color(hex: 0x3C0946),
-            Color(hex: 0x491D7F)
-        ],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    static let itemSelection = LinearGradient(
-        colors: [
-            Color(hex: 0xF46188),
-            Color(hex: 0xFF00BF)
+            .lightYellow,
+            .darkYellow
         ],
         startPoint: .top,
         endPoint: .bottom

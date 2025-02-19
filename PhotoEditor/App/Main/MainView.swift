@@ -8,7 +8,7 @@ import SwiftUI
 struct MainView: View {
     
     @State private var selectedItem: Athlete = .soccer
-    @State private var showEditorTutorial: Bool = true
+    @State private var showEditorTutorial: Bool = false
     
     var body: some View {
         NavigationStack {
