@@ -49,6 +49,9 @@
 		ED92A7C92D6B81A400E661B2 /* CardLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7C82D6B81A400E661B2 /* CardLibraryView.swift */; };
 		ED92A7CB2D6B845900E661B2 /* ProjectCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7CA2D6B845900E661B2 /* ProjectCardView.swift */; };
 		ED92A7CD2D6BB9C100E661B2 /* NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7CC2D6BB9C100E661B2 /* NavigationContent.swift */; };
+		ED92A7D02D6BC08500E661B2 /* UploadPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7CF2D6BC08500E661B2 /* UploadPhotoView.swift */; };
+		ED92A7D22D6BC0A400E661B2 /* DefaultBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7D12D6BC0A400E661B2 /* DefaultBackground.swift */; };
+		ED92A7D42D6BC77600E661B2 /* BorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7D32D6BC77600E661B2 /* BorderedButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +99,9 @@
 		ED92A7C82D6B81A400E661B2 /* CardLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardLibraryView.swift; sourceTree = "<group>"; };
 		ED92A7CA2D6B845900E661B2 /* ProjectCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCardView.swift; sourceTree = "<group>"; };
 		ED92A7CC2D6BB9C100E661B2 /* NavigationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContent.swift; sourceTree = "<group>"; };
+		ED92A7CF2D6BC08500E661B2 /* UploadPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPhotoView.swift; sourceTree = "<group>"; };
+		ED92A7D12D6BC0A400E661B2 /* DefaultBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBackground.swift; sourceTree = "<group>"; };
+		ED92A7D32D6BC77600E661B2 /* BorderedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +156,7 @@
 		ED426AAA2D5D2C8600D92CB3 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				ED92A7CE2D6BBFD100E661B2 /* UploadPhoto */,
 				ED92A7C72D6B819200E661B2 /* CardLibrary */,
 				ED8382CB2D628815006CAC70 /* Editor */,
 				ED8382C62D625366006CAC70 /* Main */,
@@ -234,6 +241,8 @@
 		ED426AFF2D5D3FDC00D92CB3 /* Customs */ = {
 			isa = PBXGroup;
 			children = (
+				ED92A7D32D6BC77600E661B2 /* BorderedButton.swift */,
+				ED92A7D12D6BC0A400E661B2 /* DefaultBackground.swift */,
 				ED92A7CC2D6BB9C100E661B2 /* NavigationContent.swift */,
 				ED426B002D5D3FEB00D92CB3 /* YellowButton.swift */,
 				ED6135182D653423007C73E8 /* BrandSlider.swift */,
@@ -277,6 +286,14 @@
 				ED92A7CA2D6B845900E661B2 /* ProjectCardView.swift */,
 			);
 			path = CardLibrary;
+			sourceTree = "<group>";
+		};
+		ED92A7CE2D6BBFD100E661B2 /* UploadPhoto */ = {
+			isa = PBXGroup;
+			children = (
+				ED92A7CF2D6BC08500E661B2 /* UploadPhotoView.swift */,
+			);
+			path = UploadPhoto;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -379,6 +396,8 @@
 				ED426AF72D5D329200D92CB3 /* OnboardingItem.swift in Sources */,
 				ED92A7CB2D6B845900E661B2 /* ProjectCardView.swift in Sources */,
 				ED426AF32D5D323200D92CB3 /* ScreenSize.swift in Sources */,
+				ED92A7D22D6BC0A400E661B2 /* DefaultBackground.swift in Sources */,
+				ED92A7D42D6BC77600E661B2 /* BorderedButton.swift in Sources */,
 				ED8382CA2D62763F006CAC70 /* SportKind.swift in Sources */,
 				ED426AE92D5D317700D92CB3 /* IdentifiableItem.swift in Sources */,
 				ED426AFC2D5D3D0D00D92CB3 /* Font+Extension.swift in Sources */,
@@ -390,6 +409,7 @@
 				ED92A7C92D6B81A400E661B2 /* CardLibraryView.swift in Sources */,
 				ED426AA62D5D293500D92CB3 /* PhotoEditorApp.swift in Sources */,
 				ED8382D02D628A9C006CAC70 /* TutorialTip.swift in Sources */,
+				ED92A7D02D6BC08500E661B2 /* UploadPhotoView.swift in Sources */,
 				ED92A7C52D6B784000E661B2 /* GenerationTextFIeld.swift in Sources */,
 				ED6135172D653182007C73E8 /* EditorView.swift in Sources */,
 			);

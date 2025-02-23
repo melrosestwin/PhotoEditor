@@ -30,7 +30,7 @@ struct NavigationContent: ViewModifier {
                     }
                 }
                 ToolbarItem(placement: .principal) {
-                    Text("Card library")
+                    Text(title)
                         .font(.poppins(17.adaptive(), weight: .bold))
                         .foregroundStyle(.white)
                 }

@@ -8,6 +8,8 @@ import SwiftUI
 struct CardLibraryView: View {
     
     @State private var showTutorial: Bool = false
+    
+    @State private var recentProjects: [Image] = []
 
     let sport: SportKind
     
@@ -29,13 +31,7 @@ struct CardLibraryView: View {
             Spacer()
         }
         .padding(.vertical, 6.adaptive())
-        .background(alignment: .center) { 
-            Image(.mainBackground)
-                .resizable()
-                .scaledToFill()
-                .frame(minWidth: 0, maxWidth: .infinity)
-                .ignoresSafeArea()
-        }
+        .setDefaultBackground()
         .overlay {
             if showTutorial {
                 EditorTutorialView(tips: TutorialTip.libraryTips) {
@@ -59,16 +55,16 @@ struct CardLibraryView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16.adaptive()) {
-//                    ForEach([], id: \.self) { image in
-//                        ProjectCardView(image: image)
-//                    }
+                    ForEach(0..<recentProjects.count, id: \.self) { index in
+                        ProjectCardView(image: recentProjects[index])
+                    }
                     
                     createButton
                 }
                 .padding(.horizontal, 32.adaptive())
             }
             .frame(height: 172.adaptive())
-            .scrollDisabled(true)
+            .scrollDisabled(recentProjects.isEmpty)
         }
     }
     
@@ -82,8 +78,8 @@ struct CardLibraryView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16.adaptive()) {
-                    ForEach(sport.templateImages, id: \.self) { image in
-                        ProjectCardView(image: image)
+                    ForEach(sport.templateImages, id: \.self) { resource in
+                        ProjectCardView(resource: resource)
                     }
                 }
                 .padding(.horizontal, 32.adaptive())
@@ -93,7 +89,13 @@ struct CardLibraryView: View {
     }
     
     var createButton: some View {
-        NavigationLink(destination: Text("sdf")) {
+        NavigationLink {
+            UploadPhotoView { image in
+                withAnimation {
+                    recentProjects.append(image)
+                }
+            }
+        } label: {
             Color.clear
                 .overlay {
                     Image(.plus)

@@ -60,13 +60,7 @@ struct MainView: View {
                 .padding(.horizontal, 42.adaptive())
                 .padding(.bottom, 10.adaptive())
             }
-            .background(alignment: .center) {
-                Image(.mainBackground)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    .ignoresSafeArea()
-            }
+            .setDefaultBackground()
             .overlay {
                 if showTutorial {
                     EditorTutorialView(tips: TutorialTip.editorTips) {

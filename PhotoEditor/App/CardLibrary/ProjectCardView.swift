@@ -7,12 +7,20 @@ import SwiftUI
 
 struct ProjectCardView: View {
     
-    let image: ImageResource
+    let image: Image
+    
+    init(image: Image) {
+        self.image = image
+    }
+    
+    init(resource: ImageResource) {
+        self.image = Image(resource)
+    }
     
     var body: some View {
         Color.clear
             .overlay {
-                Image(image)
+                image
                     .resizable()
                     .scaledToFill()
             }
