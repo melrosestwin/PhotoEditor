@@ -10,6 +10,7 @@ struct EditorTutorialView: View {
     @State private var selectedIndex: Int = 0
     
     let tips: [TutorialTip]
+    var showFinalButton: Bool = false
     let onDismiss: () -> Void
     
     var body: some View {
@@ -18,7 +19,8 @@ struct EditorTutorialView: View {
             
             TabView(selection: $selectedIndex) {
                 ForEach(0..<tips.count, id: \.self) { index in
-                    TipCellView(tip: tips[index], onClose: onDismiss) {
+                    let buttonType: TutorialButtonType? = index < tips.count - 1 ? .next : (showFinalButton ? .final : nil)
+                    TipCellView(tip: tips[index], buttonType: buttonType, onClose: onDismiss) {
                         if selectedIndex < tips.count - 1 {
                             selectedIndex += 1
                         } else {
@@ -39,11 +41,5 @@ struct EditorTutorialView: View {
                 .opacity(0.6)
                 .ignoresSafeArea()
         }
-    }
-}
-
-#Preview {
-    EditorTutorialView(tips: TutorialTip.editorTips) {
-        
     }
 }

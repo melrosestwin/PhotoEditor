@@ -5,9 +5,15 @@
 
 import SwiftUI
 
+enum TutorialButtonType {
+    case next
+    case final
+}
+
 struct TipCellView: View {
     
     let tip: TutorialTip
+    let buttonType: TutorialButtonType?
     let onClose: () -> Void
     let onNext: () -> Void
     
@@ -42,10 +48,8 @@ struct TipCellView: View {
                 .padding(.top, 12.adaptive())
                 
                 HStack {
-                    if tip == .ready {
-                        YellowButton(title: "START", action: onClose)
-                            .padding(.horizontal, 10.adaptive())
-                    } else {
+                    switch buttonType {
+                    case .next:
                         Spacer()
                         
                         Button {
@@ -56,6 +60,11 @@ struct TipCellView: View {
                                 .scaledToFit()
                                 .frame(width: 50.adaptive(), height: 50.adaptive())
                         }
+                    case .final:
+                        YellowButton(title: "START", action: onClose)
+                            .padding(.horizontal, 10.adaptive())
+                    default:
+                        Spacer()
                     }
                 }
                 .padding(.horizontal, 24.adaptive())

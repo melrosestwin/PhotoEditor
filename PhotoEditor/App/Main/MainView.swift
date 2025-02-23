@@ -7,13 +7,13 @@ import SwiftUI
 
 struct MainView: View {
     
-    @State private var selectedItem: Athlete = .soccer
-    @State private var showEditorTutorial: Bool = false
+    @State private var selectedSport: SportKind = .soccer
+    @State private var showTutorial: Bool = false
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 12.adaptive()) {
-                Text(selectedItem.title)
+                Text(selectedSport.title)
                     .font(.mazzard(24))
                     .foregroundStyle(.white)
                     .padding(.top, 6.adaptive())
@@ -21,18 +21,18 @@ struct MainView: View {
                     .background(.titleBackground)
                     .border(.lightYellow, width: 1)
                     .padding(.top, 12.adaptive())
-                    .animation(.default, value: selectedItem)
+                    .animation(.default, value: selectedSport)
                 
-                TabView(selection: $selectedItem) {
-                    ForEach(Athlete.allCases, id: \.self) { item in
-                        Image(item.icon)
+                TabView(selection: $selectedSport) {
+                    ForEach(SportKind.allCases, id: \.self) { item in
+                        Image(item.athleteIcon)
                             .resizable()
                             .scaledToFit()
                             .aspectRatio(CGSize(width: 210, height: 500), contentMode: .fit)
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .animation(.default, value: selectedItem)
+                .animation(.default, value: selectedSport)
                 .allowsHitTesting(false)
                 .overlay {
                     pageButtons
@@ -41,8 +41,21 @@ struct MainView: View {
                 
                 Spacer(minLength: 100)
                 
-                YellowButton(title: "START") {
-                    
+                NavigationLink(destination: CardLibraryView(sport: selectedSport)) {
+                    Text("START")
+                        .font(.mazzard(24.adaptive()))
+                        .foregroundStyle(.buttonTitle)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 60.adaptive())
+                        .background {
+                            LinearGradient(
+                                colors: [.lightYellow, .darkYellow],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                            .shadow(color: .orangeShadow, radius: 12, x: 0, y: 0)
+                        }
+                        .clipShape(.rect(cornerRadius: 15.adaptive()))
                 }
                 .padding(.horizontal, 42.adaptive())
                 .padding(.bottom, 10.adaptive())
@@ -55,10 +68,10 @@ struct MainView: View {
                     .ignoresSafeArea()
             }
             .overlay {
-                if showEditorTutorial {
+                if showTutorial {
                     EditorTutorialView(tips: TutorialTip.editorTips) {
                         withAnimation {
-                            showEditorTutorial = false
+                            showTutorial = false
                         }
                     }
                 }
@@ -69,10 +82,10 @@ struct MainView: View {
     var pageButtons: some View {
         HStack {
             Button {
-                switch selectedItem {
-                case .soccer: selectedItem = .baseball
-                case .boxing: selectedItem = .soccer
-                case .baseball: selectedItem = .boxing
+                switch selectedSport {
+                case .soccer: selectedSport = .cricket
+                case .boxing: selectedSport = .soccer
+                case .cricket: selectedSport = .boxing
                 }
             } label: {
                 Image(.leftArrow)
@@ -84,10 +97,10 @@ struct MainView: View {
             Spacer()
             
             Button {
-                switch selectedItem {
-                case .soccer: selectedItem = .boxing
-                case .boxing: selectedItem = .baseball
-                case .baseball: selectedItem = .soccer
+                switch selectedSport {
+                case .soccer: selectedSport = .boxing
+                case .boxing: selectedSport = .cricket
+                case .cricket: selectedSport = .soccer
                 }
             } label: {
                 Image(.rightArrow)

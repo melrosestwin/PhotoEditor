@@ -7,9 +7,16 @@ import SwiftUI
 
 @main
 struct PhotoEditorApp: App {
+    
+    @AppStorage("isFirstLaunch") var isFirstLaunch: Bool = true
+    
     var body: some Scene {
         WindowGroup {
-            OnboardingView(isFirstLaunch: .constant(false))
+            if isFirstLaunch {
+                OnboardingView(isFirstLaunch: $isFirstLaunch)
+            } else {
+                MainView()
+            }
         }
     }
 }

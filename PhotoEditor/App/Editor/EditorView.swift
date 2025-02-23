@@ -7,6 +7,7 @@ import SwiftUI
 
 struct EditorView: View {
     
+    @State var showTutorial: Bool = false
     @State var sliderValue: CGFloat = 0.5
     
     var body: some View {
@@ -20,6 +21,15 @@ struct EditorView: View {
             toolsBar
         }
         .ignoresSafeArea()
+        .overlay {
+            if showTutorial {
+                EditorTutorialView(tips: TutorialTip.editorTips, showFinalButton: true) {
+                    withAnimation {
+                        showTutorial = false
+                    }
+                }
+            }
+        }
     }
     
     var toolsBar: some View {

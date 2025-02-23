@@ -101,7 +101,10 @@ struct OnboardingView: View {
                     switch selectedItem {
                     case .create: selectedItem = .edit
                     case .edit: selectedItem = .choice
-                    default: break
+                    default:
+                        withAnimation {
+                            isFirstLaunch = false
+                        }
                     }
                 }
             } label: {
