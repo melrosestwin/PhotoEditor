@@ -2,8 +2,6 @@
 //  UploadPhotoView.swift
 //  PhotoEditor
 //
-//  Created by Николай Гарчу on 23.02.2025.
-//
 
 import PhotosUI
 import SwiftUI

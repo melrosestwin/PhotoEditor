@@ -79,7 +79,9 @@ struct CardLibraryView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16.adaptive()) {
                     ForEach(sport.templateImages, id: \.self) { resource in
-                        ProjectCardView(resource: resource)
+                        NavigationLink(destination: EditorView(image: UIImage(resource: resource))) {
+                            ProjectCardView(resource: resource)
+                        }
                     }
                 }
                 .padding(.horizontal, 32.adaptive())

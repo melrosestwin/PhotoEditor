@@ -5,12 +5,13 @@
 
 import SwiftUI
 
-struct NavigationContent: ViewModifier {
+struct NavigationContent<TrailingContent: View>: ViewModifier {
     
     @Environment(\.dismiss) private var dismiss
     
     let title: String
     let backButtonTitle: String
+    let trailingContent: TrailingContent
     
     func body(content: Content) -> some View {
         content
@@ -34,12 +35,19 @@ struct NavigationContent: ViewModifier {
                         .font(.poppins(17.adaptive(), weight: .bold))
                         .foregroundStyle(.white)
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    trailingContent
+                }
             }
     }
 }
 
 extension View {
-    public func navigationContent(title: String, backButtonTitle: String = "Return") -> some View {
-        modifier(NavigationContent(title: title, backButtonTitle: backButtonTitle))
+    public func navigationContent<TrailingContent: View>(
+        title: String,
+        backButtonTitle: String = "Return",
+        @ViewBuilder trailing: @escaping () -> TrailingContent = { EmptyView() }
+    ) -> some View {
+        modifier(NavigationContent(title: title, backButtonTitle: backButtonTitle, trailingContent: trailing()))
     }
 }

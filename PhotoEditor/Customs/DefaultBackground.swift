@@ -1,5 +1,5 @@
 //
-//  NavigationContent 2.swift
+//  NavigationContent.swift
 //  PhotoEditor
 //
 

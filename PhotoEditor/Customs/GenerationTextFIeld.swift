@@ -7,9 +7,9 @@ import SwiftUI
 
 struct GenerationTextFIeld: View {
     
-    let placeholder: String = "Football uniform, black and yellow"
-    @State var text: String = ""
-    let onGenerate: () -> Void = { }
+    let placeholder: String
+    @Binding var text: String
+    let onGenerate: () -> Void
     
     @FocusState var isEditing: Bool
     
@@ -43,8 +43,4 @@ struct GenerationTextFIeld: View {
             isEditing = true
         }
     }
-}
-
-#Preview {
-    GenerationTextFIeld()
 }

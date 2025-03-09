@@ -7,9 +7,8 @@ import SwiftUI
 
 struct BrandSlider: View {
     
-    private let thumbRadius: CGFloat = 27.adaptive()
-    
-    @Binding var value: CGFloat
+    private let thumbDiameter: CGFloat = 27.adaptive()
+    @Binding var value: Double
     
     var body: some View {
         VStack(spacing: 0) {
@@ -23,20 +22,20 @@ struct BrandSlider: View {
                         .fill(.lightYellow)
                         .mask(alignment: .leading) {
                             Rectangle()
-                                .frame(width: reader.size.width * min(value, 1) - thumbRadius / 2)
+                                .frame(width: (reader.size.width - thumbDiameter / 2) * min(value, 1))
                         }
                 }
                 .frame(height: 2.adaptive())
                 .overlay(alignment: .leading) {
                     Circle()
                         .fill(.black)
-                        .frame(width: thumbRadius, height: thumbRadius)
+                        .frame(width: thumbDiameter, height: thumbDiameter)
                         .overlay {
                             Circle()
                                 .stroke(LinearGradient.yellow, lineWidth: 2.adaptive())
                                 .frame(width: 18.adaptive(), height: 18.adaptive())
                         }
-                        .offset(x: reader.size.width * min(value, 1) - thumbRadius / 2)
+                        .offset(x: (reader.size.width - thumbDiameter) * min(value, 1))
                         .gesture(
                             DragGesture()
                                 .onChanged { value in
@@ -47,7 +46,6 @@ struct BrandSlider: View {
                 }
             }
             .frame(height: 2.adaptive())
-            .padding(.horizontal, thumbRadius / 2)
             
             Spacer()
         }
