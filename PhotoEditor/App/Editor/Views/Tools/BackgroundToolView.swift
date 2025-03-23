@@ -26,34 +26,7 @@ enum BackgroundType: Equatable {
     case image(UIImage)
 }
 
-enum BackgroundColor: Int, CaseIterable {
-    case white
-    case red
-    case darkBlue
-    case yellow
-    case lightBlue
-    case green
-    case pink
-    case orange
-    
-    var color: Color {
-        switch self {
-        case .white: .white
-        case .red: .red
-        case .darkBlue: .darkBlue
-        case .yellow: .darkYellow
-        case .lightBlue: .lightBlue
-        case .green: .brandGreen
-        case .pink: .brandPink
-        case .orange: .brandBrown
-        }
-    }
-    
-    static let topCases: [BackgroundColor] = [.white, .red, .darkBlue, .yellow]
-    static let bottomCases: [BackgroundColor] = [.lightBlue, .green, .pink, .orange]
-}
-
-struct BackgroundToolView: View {
+struct BackgroundToolView<GenerativeContent: View>: View {
     
     @State private var pickerItem: PhotosPickerItem?
     
@@ -64,17 +37,33 @@ struct BackgroundToolView: View {
         [.lightBlue, .green, .pink, .orange]
     ]
     
+    @State private var selectedType: BackgroundTab = .image
+    @State private var selectedBackground: BackgroundType?
     
-    @State var selectedType: BackgroundTab = .image
-    @State var selectedBackground: BackgroundType?
+    let sport: SportKind
+    let onChange: (BackgroundType) -> Void
+    let onClose: () -> Void
+    let onSave: () -> Void
+    let content: GenerativeContent
     
+    init(
+        sport: SportKind,
+        onChange: @escaping (BackgroundType) -> Void,
+        onClose: @escaping () -> Void,
+        onSave: @escaping () -> Void,
+        @ViewBuilder content: @escaping () -> GenerativeContent
+    ) {
+        self.sport = sport
+        self.onChange = onChange
+        self.onClose = onClose
+        self.onSave = onSave
+        self.content = content()
+    }
     
     var body: some View {
         VStack {
             HStack(spacing: 0) {
-                Button {
-                    
-                } label: {
+                Button(action: onClose) {
                     Image(.crossButton)
                         .resizable()
                         .scaledToFit()
@@ -95,9 +84,7 @@ struct BackgroundToolView: View {
                     Spacer()
                 }
                 
-                Button {
-                    
-                } label: {
+                Button(action: onSave) {
                     Image(.checkButton)
                         .resizable()
                         .scaledToFit()
@@ -114,7 +101,7 @@ struct BackgroundToolView: View {
                 imagesView
                     .frame(height: 104.adaptive())
             case .generated:
-                Spacer()
+                content
             }
         }
     }
@@ -208,8 +195,4 @@ struct BackgroundToolView: View {
             .padding(.horizontal, 16.adaptive())
         }
     }
-}
-
-#Preview {
-    BackgroundToolView()
 }

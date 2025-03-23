@@ -32,4 +32,13 @@ enum EditorTab: Int, CaseIterable {
         case .size: .sizeTool
         }
     }
+    
+    var generatorPlaceholder: String {
+        switch self {
+        case .background: "Day, football stadium"
+        case .insert: "Hand holding a soccer ball"
+        case .outfit: "Football uniform, black and yellow"
+        case .size: ""
+        }
+    }
 }

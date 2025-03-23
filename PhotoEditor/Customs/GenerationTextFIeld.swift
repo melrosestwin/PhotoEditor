@@ -21,9 +21,7 @@ struct GenerationTextFIeld: View {
                 .autocorrectionDisabled()
                 .lineLimit(1)
             
-            Button {
-                
-            } label: {
+            Button(action: onGenerate) {
                 Text("Generate")
                     .font(.poppins(14.adaptive()))
                     .foregroundStyle(.black)

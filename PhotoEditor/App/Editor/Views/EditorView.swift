@@ -9,43 +9,51 @@ struct EditorView: View {
     
     @StateObject var vm: EditorViewModel
     
-    init(image: UIImage) {
-        self._vm = StateObject(wrappedValue: EditorViewModel(image: image))
+    init(image: UIImage, sportKind: SportKind) {
+        self._vm = StateObject(wrappedValue: EditorViewModel(image: image, sportKind: sportKind))
     }
     
     var body: some View {
         VStack(spacing: 0) {
             
-            VStack {
-                GeometryReader { geometry in
-                    
-                    let minWidth = min(geometry.size.height * vm.croppedSize.imageSize, geometry.size.width)
-                    let minHeight = min(geometry.size.width / vm.croppedSize.imageSize, geometry.size.height)
-                    
-                    Image(uiImage: .editorPlaceholder)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: minWidth, height: minHeight)
-                        .clipped()
-                        .overlay {
-                            if vm.selectedTab != .size {
-                                Canvas { context, size in
-                                    context.blendMode = .destinationAtop
-                                    vm.canvasPaths.forEach { path in
-                                        context.stroke(path.path, with: .color(path.tool.color), style: .init(lineWidth: path.lineWidth, lineCap: .round, lineJoin: .round))
-                                    }
-                                    context.stroke(vm.currentPath, with: .color(vm.selectedTool.color), style: .init(lineWidth: vm.brushWidth, lineCap: .round, lineJoin: .round))
-                                }
-                                .gesture(
-                                    DragGesture()
-                                        .onChanged(vm.onBrushChange(_:))
-                                        .onEnded(vm.onBrushEnd(_:))
+            VStack(alignment: .center, spacing: 0) {
+                Spacer(minLength: 0)
+                Image(uiImage: vm.displayImage)
+                    .resizable()
+                    .scaledToFit()
+                    .overlay {
+                        if vm.selectedTab == .size {
+                            Color.black.opacity(0.6)
+                            Image(uiImage: vm.displayImage)
+                                .resizable()
+                                .scaledToFill()
+                                .compositingGroup()
+                                .mask(
+                                    Rectangle()
+                                        .fill(style: FillStyle(eoFill: true))
+                                        .aspectRatio(vm.cropType.ratio, contentMode: .fit)
                                 )
+                            Rectangle()
+                                .stroke(.lightYellow, lineWidth: 1)
+                            //                                    .frame(width: vm.cropImage().width, height: vm.cropImage().height)
+                                .aspectRatio(vm.cropType.ratio, contentMode: .fit)
+                            
+                        } else {
+                            Canvas { context, size in
+                                context.blendMode = .destinationAtop
+                                vm.canvasPaths.forEach { path in
+                                    context.stroke(path.path, with: .color(path.tool.color), style: .init(lineWidth: path.lineWidth, lineCap: .round, lineJoin: .round))
+                                }
+                                context.stroke(vm.currentPath, with: .color(vm.selectedTool.color), style: .init(lineWidth: vm.brushWidth, lineCap: .round, lineJoin: .round))
                             }
+                            .gesture(
+                                DragGesture()
+                                    .onChanged(vm.onBrushChange(_:))
+                                    .onEnded(vm.onBrushEnd(_:))
+                            )
                         }
-                        .padding(.horizontal, (geometry.size.width - minWidth) / 2)
-                        .padding(.vertical, (geometry.size.height - minHeight) / 2)
                 }
+                Spacer(minLength: 0)
             }
             .overlay(alignment: .bottom) {
                 editingTools
@@ -57,6 +65,7 @@ struct EditorView: View {
                     loadingView
                 }
             }
+            .border(.red)
             
             currentToolView
             
@@ -130,40 +139,96 @@ struct EditorView: View {
             
             switch vm.selectedTab {
             case .size:
-                CropToolView(type: vm.croppedSize) { type in
-                    vm.croppedSize = type
+                CropToolView(type: vm.cropType) { type in
+//                    vm.editingImage = vm.imageHistory.last ?? vm.savedImage
+                    vm.cropType = type
+                } onSave: { 
+                    if let image = vm.cropImage() {
+                        vm.imageHistory.append(image)
+                    }
                 }
+                
+                Spacer()
             default:
-                BrandSlider(value: $vm.sliderValue)
-                Spacer()
-                textField
-                Spacer()
+                switch vm.editingStep {
+                case .tip:
+                    BrandSlider(value: $vm.sliderValue)
+                    
+                    Spacer(minLength: 0)
+                    
+                    brushTip
+                case .brush:
+                    BrandSlider(value: $vm.sliderValue)
+                    
+                    Spacer(minLength: 0)
+                    
+                    Text("Describe the object you want to insert")
+                        .font(.poppins(14.adaptive()))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    GenerationTextFIeld(placeholder: vm.selectedTab.generatorPlaceholder, text: $vm.promptText) {
+                        withAnimation {
+                            vm.editingStep = .generate
+                        }
+                    }
+                case .generate:
+                    
+                    if vm.selectedTab == .background {
+                        BackgroundToolView(sport: vm.sportKind) { background in
+                            
+                        } onClose: {
+                            
+                        } onSave: {
+                            
+                        } content: {
+                            generationView
+                        }
+                    } else {
+                        
+                        GenerationTextFIeld(placeholder: vm.selectedTab.generatorPlaceholder, text: $vm.promptText) {
+                            
+                        }
+                    }
+                }
+                
+                Spacer(minLength: 0)
             }
         }
         .padding(.vertical, 16.adaptive())
         .frame(height: 210.adaptive())
-        .padding(.horizontal, 28.adaptive())
+        .padding(.horizontal, 16.adaptive())
     }
     
-    var saveButtons: some View {
-        HStack {
-            
-        }
-    }
-    
-    var textField: some View {
-        Group {
-            if vm.showBrushTip {
-                brushTip
-            } else {
-                Text("Describe the object you want to insert")
-                    .font(.poppins(14.adaptive()))
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+    var generationView: some View {
+        VStack(spacing: 12.adaptive()) {
+            GenerationTextFIeld(placeholder: vm.selectedTab.generatorPlaceholder, text: $vm.promptText) {
                 
-                GenerationTextFIeld(placeholder: "Football uniform, black and yellow", text: $vm.promptText) {
+            }
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 20.adaptive()) {
                     
+                    
+
+                    ForEach(vm.generatedImages, id: \.self) { uiImage in
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fill)
+                            .clipShape(.rect(cornerRadius: 10.adaptive(), style: .continuous))
+//                            .overlay {
+//                                if selectedBackground == .image(uiImage) {
+//                                    RoundedRectangle(cornerRadius: 10.adaptive(), style: .continuous)
+//                                        .inset(by: 1)
+//                                        .stroke(.lightYellow, lineWidth: 2)
+//                                }
+//                            }
+//                            .onTapGesture {
+//                                selectedBackground = .image(uiImage)
+//                            }
+                    }
                 }
+                .padding(.horizontal, 16.adaptive())
             }
         }
     }
@@ -260,6 +325,6 @@ struct EditorView: View {
 
 #Preview {
     NavigationStack {
-        EditorView(image: .editorPlaceholder)
+        EditorView(image: .editorPlaceholder, sportKind: .soccer)
     }
 }

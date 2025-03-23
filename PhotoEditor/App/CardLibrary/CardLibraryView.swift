@@ -79,7 +79,7 @@ struct CardLibraryView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16.adaptive()) {
                     ForEach(sport.templateImages, id: \.self) { resource in
-                        NavigationLink(destination: EditorView(image: UIImage(resource: resource))) {
+                        NavigationLink(destination: EditorView(image: UIImage(resource: resource), sportKind: sport)) {
                             ProjectCardView(resource: resource)
                         }
                     }
