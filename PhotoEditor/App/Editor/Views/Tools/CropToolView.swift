@@ -37,31 +37,38 @@ enum CropType: Int, CaseIterable {
 
 struct CropToolView: View {
     
-    let type: CropType
-    let onChange: (CropType) -> Void
-    let onSave: () -> Void
+    @State private var cropType: CropType?
     
-    init(
-        type: CropType,
-        onChange: @escaping (CropType) -> Void,
-        onSave: @escaping () -> Void
-    ) {
-        self.type = type
-        self.onChange = onChange
-        self.onSave = onSave
-    }
+    @ObservedObject var vm: EditorViewModel
     
     var body: some View {
         VStack {
             HStack(spacing: 0) {
+                Button {
+                    cropType = nil
+                    vm.cancelLastChanges()
+                } label: {
+                    Image(.crossButton)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 34.adaptive(), height: 34.adaptive())
+                }
+                .disabled(vm.editingImage == nil)
+                .opacity(vm.editingImage == nil ? 0 : 1)
+                
                 Spacer()
                 
-                Button(action: onSave) {
+                Button {
+                    cropType = nil
+                    vm.saveLastChanges()
+                } label: {
                     Image(.checkButton)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 34.adaptive(), height: 34.adaptive())
                 }
+                .disabled(vm.editingImage == nil)
+                .opacity(vm.editingImage == nil ? 0 : 1)
             }
             
             HStack(alignment: .bottom, spacing: 17.adaptive()) {
@@ -76,14 +83,15 @@ struct CropToolView: View {
                                 .foregroundStyle(.white)
                         }
                         .overlay {
-                            if type == self.type {
+                            if cropType == type {
                                 RoundedRectangle(cornerRadius: 5.adaptive(), style: .continuous)
                                     .inset(by: 0.5)
                                     .stroke(.lightYellow, lineWidth: 1)
                             }
                         }
                         .onTapGesture {
-                            onChange(type)
+                            cropType = type
+                            vm.cropImage(type)
                         }
                 }
                 Spacer(minLength: 0)

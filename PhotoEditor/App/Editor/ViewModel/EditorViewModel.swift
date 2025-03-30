@@ -14,12 +14,15 @@ enum EditingStep: Int, CaseIterable {
 @MainActor
 final class EditorViewModel: ObservableObject {
     
+    let apiManager: APIManager = APIManager()
+    
     let sportKind: SportKind
     var originalImage: UIImage
     
     // LAYOUT
     @Published var selectedTab: EditorTab = .background
-    @Published var editingStep: EditingStep = .tip
+    @Published var backgroundTab: BackgroundTab = .color
+    @Published var showBrushTip: Bool = false
     @Published var showTutorial: Bool = false
     @Published var isLoading: Bool = false
     
@@ -30,16 +33,12 @@ final class EditorViewModel: ObservableObject {
     // SHARED
     @Published var sliderValue: Double = 0.5
     @Published var selectedTool: CanvasTool = .brush
-    @Published var promptText: String = ""
-    
-    // CHANGES
-    @Published var cropType: CropType = .square
-    @Published var generatedImages: [UIImage] = SportKind.cricket.templateImages.map({ UIImage(resource: $0) })
     
     @Published var imageHistory: [UIImage] = []
     @Published var cancelledHistory: [UIImage] = []
+    @Published var editingImage: UIImage?
     
-    var displayImage: UIImage {
+    var lastImage: UIImage {
         return imageHistory.last ?? originalImage
     }
     
@@ -64,18 +63,64 @@ final class EditorViewModel: ObservableObject {
     }
     
     func saveLastChanges() {
-//        if let image = editingImage {
-//            imageHistory.append(image)
-//            cancelledHistory.removeAll()
-//        }
+        if let image = editingImage {
+            imageHistory.append(image)
+            editingImage = nil
+        }
     }
     
     func cancelLastChanges() {
-//        editingImage = imageHistory.last ?? originalImage
+        editingImage = nil
     }
     
-    func cropImage() -> UIImage? {
-        let originalImage = displayImage
+    func changeBackground(_ background: BackgroundType) {
+        Task {
+            do {
+                isLoading = true
+                var resultData: Data
+                switch background {
+                case .color(let color):
+                    let id = try await apiManager.replaceBackground(for: lastImage, with: "Background of \(color.toHex() ?? "") color")
+                    resultData = try await apiManager.fetchResults(generationId: id)
+                case .image(let uIImage):
+                    let id = try await apiManager.replaceBackground(for: lastImage, with: uIImage)
+                    resultData = try await apiManager.fetchResults(generationId: id)
+                case .prompt(let prompt):
+                    let id = try await apiManager.replaceBackground(for: lastImage, with: prompt)
+                    resultData = try await apiManager.fetchResults(generationId: id)
+                case .clear:
+                    resultData = try await apiManager.removeBackground(for: lastImage)
+                }
+                editingImage = UIImage(data: resultData)
+                isLoading = false
+            } catch {
+                print(error)
+                isLoading = false
+            }
+            
+        }
+    }
+    
+    func inpaint(prompt: String) {
+        let image = editingImage ?? lastImage
+        let text = selectedTab.initialPrompt + prompt
+        let mask = ImageRenderer(content: RenderingCanvasView(paths: canvasPaths)).uiImage
+        Task {
+            do {
+                isLoading = true
+                let resultData = try await apiManager.inpaint(for: image, with: text, using: mask)
+                editingImage = UIImage(data: resultData)
+                isLoading = false
+            } catch {
+                print(error)
+                isLoading = false
+            }
+            
+        }
+    }
+    
+    func cropImage(_ cropType: CropType) {
+        let originalImage = lastImage
         let originalSize = originalImage.size
         
         var cropSize: CGSize
@@ -95,24 +140,23 @@ final class EditorViewModel: ObservableObject {
         }
         
         let origin = CGPoint(x: (originalSize.width - cropSize.width) / 2, y: (originalSize.height - cropSize.height) / 2)
-        return originalImage.cropped(to: CGRect(origin: origin, size: cropSize))
+        self.editingImage = originalImage.cropped(to: CGRect(origin: origin, size: cropSize))
     }
     
     
     func undo() {
-        
+        if !imageHistory.isEmpty {
+            cancelledHistory.append(imageHistory.removeLast())
+        }
     }
     
     func redo() {
-        
+        if !cancelledHistory.isEmpty {
+            imageHistory.append(cancelledHistory.removeLast())
+        }
     }
     
     func onBrushChange(_ value: DragGesture.Value) {
-        if editingStep == .tip {
-            withAnimation {
-                editingStep = .brush
-            }
-        }
         if pathPoints.isEmpty {
             pathPoints.append(value.startLocation)
         }
@@ -126,28 +170,3 @@ final class EditorViewModel: ObservableObject {
     }
 }
 
-extension UIImage {
-    func copyFromData() -> UIImage? {
-        if let pngData = self.pngData() {
-            return UIImage(data: pngData)
-        } else {
-            return nil
-        }
-    }
-    
-    func cropped(to rect: CGRect) -> UIImage? {
-        guard let cgImage = self.cgImage else { return nil }
-        
-        // Convert points to pixels
-        let scale = self.scale
-        let pixelRect = CGRect(
-            x: rect.origin.x * scale,
-            y: rect.origin.y * scale,
-            width: rect.size.width * scale,
-            height: rect.size.height * scale
-        )
-        
-        guard let croppedCGImage = cgImage.cropping(to: pixelRect) else { return nil }
-        return UIImage(cgImage: croppedCGImage, scale: scale, orientation: self.imageOrientation)
-    }
-}

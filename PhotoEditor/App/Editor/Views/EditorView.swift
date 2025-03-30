@@ -18,27 +18,11 @@ struct EditorView: View {
             
             VStack(alignment: .center, spacing: 0) {
                 Spacer(minLength: 0)
-                Image(uiImage: vm.displayImage)
+                Image(uiImage: vm.editingImage ?? vm.lastImage)
                     .resizable()
                     .scaledToFit()
                     .overlay {
-                        if vm.selectedTab == .size {
-                            Color.black.opacity(0.6)
-                            Image(uiImage: vm.displayImage)
-                                .resizable()
-                                .scaledToFill()
-                                .compositingGroup()
-                                .mask(
-                                    Rectangle()
-                                        .fill(style: FillStyle(eoFill: true))
-                                        .aspectRatio(vm.cropType.ratio, contentMode: .fit)
-                                )
-                            Rectangle()
-                                .stroke(.lightYellow, lineWidth: 1)
-                            //                                    .frame(width: vm.cropImage().width, height: vm.cropImage().height)
-                                .aspectRatio(vm.cropType.ratio, contentMode: .fit)
-                            
-                        } else {
+                        if vm.selectedTab == .insert || vm.selectedTab == .outfit {
                             Canvas { context, size in
                                 context.blendMode = .destinationAtop
                                 vm.canvasPaths.forEach { path in
@@ -55,6 +39,7 @@ struct EditorView: View {
                 }
                 Spacer(minLength: 0)
             }
+            .frame(maxWidth: .infinity)
             .overlay(alignment: .bottom) {
                 editingTools
                     .padding(.horizontal, 16.adaptive())
@@ -103,8 +88,8 @@ struct EditorView: View {
                     .scaledToFit()
                     .frame(width: 34.adaptive(), height: 34.adaptive())
             }
-//            .disabled(vm.canvasPaths.isEmpty)
-//            .opacity(vm.canvasPaths.isEmpty ? 0.5 : 1)
+            .disabled(vm.imageHistory.isEmpty)
+            .opacity(vm.imageHistory.isEmpty ? 0.5 : 1)
             
             Button {
                 vm.redo()
@@ -114,8 +99,8 @@ struct EditorView: View {
                     .scaledToFit()
                     .frame(width: 34.adaptive(), height: 34.adaptive())
             }
-//            .disabled(vm.cancelledPaths.isEmpty)
-//            .opacity(vm.cancelledPaths.isEmpty ? 0.5 : 1)
+            .disabled(vm.cancelledHistory.isEmpty)
+            .opacity(vm.cancelledHistory.isEmpty ? 0.5 : 1)
             
             Spacer()
             
@@ -138,61 +123,19 @@ struct EditorView: View {
         VStack(spacing: 12.adaptive()) {
             
             switch vm.selectedTab {
-            case .size:
-                CropToolView(type: vm.cropType) { type in
-//                    vm.editingImage = vm.imageHistory.last ?? vm.savedImage
-                    vm.cropType = type
-                } onSave: { 
-                    if let image = vm.cropImage() {
-                        vm.imageHistory.append(image)
-                    }
+            case .background:
+                BackgroundToolView(vm: vm) {
+                    generationField
                 }
+                
+            case .size:
+                CropToolView(vm: vm)
                 
                 Spacer()
             default:
-                switch vm.editingStep {
-                case .tip:
-                    BrandSlider(value: $vm.sliderValue)
-                    
-                    Spacer(minLength: 0)
-                    
-                    brushTip
-                case .brush:
-                    BrandSlider(value: $vm.sliderValue)
-                    
-                    Spacer(minLength: 0)
-                    
-                    Text("Describe the object you want to insert")
-                        .font(.poppins(14.adaptive()))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    GenerationTextFIeld(placeholder: vm.selectedTab.generatorPlaceholder, text: $vm.promptText) {
-                        withAnimation {
-                            vm.editingStep = .generate
-                        }
-                    }
-                case .generate:
-                    
-                    if vm.selectedTab == .background {
-                        BackgroundToolView(sport: vm.sportKind) { background in
-                            
-                        } onClose: {
-                            
-                        } onSave: {
-                            
-                        } content: {
-                            generationView
-                        }
-                    } else {
-                        
-                        GenerationTextFIeld(placeholder: vm.selectedTab.generatorPlaceholder, text: $vm.promptText) {
-                            
-                        }
-                    }
-                }
+                BrandSlider(value: $vm.sliderValue)
                 
-                Spacer(minLength: 0)
+                generationField
             }
         }
         .padding(.vertical, 16.adaptive())
@@ -200,36 +143,26 @@ struct EditorView: View {
         .padding(.horizontal, 16.adaptive())
     }
     
-    var generationView: some View {
-        VStack(spacing: 12.adaptive()) {
-            GenerationTextFIeld(placeholder: vm.selectedTab.generatorPlaceholder, text: $vm.promptText) {
-                
+    var generationField: some View {
+        Group {
+            Spacer(minLength: 0)
+            
+            Text("Describe the object you want to insert")
+                .font(.poppins(14.adaptive()))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            GenerationTextField(placeholder: vm.selectedTab.generatorPlaceholder) { prompt in
+                switch vm.selectedTab {
+                case .background:
+                    vm.changeBackground(.prompt(prompt))
+                case .insert, .outfit:
+                    vm.inpaint(prompt: prompt)
+                case .size: break
+                }
             }
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 20.adaptive()) {
-                    
-                    
-
-                    ForEach(vm.generatedImages, id: \.self) { uiImage in
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .aspectRatio(1, contentMode: .fill)
-                            .clipShape(.rect(cornerRadius: 10.adaptive(), style: .continuous))
-//                            .overlay {
-//                                if selectedBackground == .image(uiImage) {
-//                                    RoundedRectangle(cornerRadius: 10.adaptive(), style: .continuous)
-//                                        .inset(by: 1)
-//                                        .stroke(.lightYellow, lineWidth: 2)
-//                                }
-//                            }
-//                            .onTapGesture {
-//                                selectedBackground = .image(uiImage)
-//                            }
-                    }
-                }
-                .padding(.horizontal, 16.adaptive())
-            }
+            Spacer(minLength: 0)
         }
     }
     
@@ -269,8 +202,10 @@ struct EditorView: View {
                         }
                     }
                     .onTapGesture {
-                        withAnimation {
-                            vm.selectedTab = tool
+                        if vm.selectedTab != tool, vm.editingImage == nil, !vm.isLoading {
+                            withAnimation {
+                                vm.selectedTab = tool
+                            }
                         }
                     }
                 }

@@ -38,10 +38,14 @@
 		ED426AFC2D5D3D0D00D92CB3 /* Font+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED426AFB2D5D3D0D00D92CB3 /* Font+Extension.swift */; };
 		ED426AFE2D5D3F8800D92CB3 /* MazzardH-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = ED426AFD2D5D3F8800D92CB3 /* MazzardH-Bold.otf */; };
 		ED426B012D5D3FEB00D92CB3 /* YellowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED426B002D5D3FEB00D92CB3 /* YellowButton.swift */; };
+		ED59ED102D90A8D5001EF0A2 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED59ED0F2D90A8D5001EF0A2 /* UIImage+Extension.swift */; };
+		ED59ED122D90A935001EF0A2 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED59ED112D90A935001EF0A2 /* APIManager.swift */; };
 		ED5ABF3E2D748BEE0086AD82 /* BrushPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5ABF3D2D748BEE0086AD82 /* BrushPath.swift */; };
 		ED5ABF422D74E69C0086AD82 /* EditorTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5ABF412D74E69C0086AD82 /* EditorTab.swift */; };
 		ED5ABF442D74E7590086AD82 /* EditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5ABF432D74E7590086AD82 /* EditorViewModel.swift */; };
 		ED5ABF462D74EB0F0086AD82 /* RoundedCornerShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5ABF452D74EB0F0086AD82 /* RoundedCornerShape.swift */; };
+		ED5B37672D92152D002C8773 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = ED5B37662D92152D002C8773 /* Alamofire */; };
+		ED60D80C2D960D3100D6A5B6 /* RenderingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60D80B2D960D3100D6A5B6 /* RenderingCanvasView.swift */; };
 		ED6135172D653182007C73E8 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6135162D653182007C73E8 /* EditorView.swift */; };
 		ED6135192D653423007C73E8 /* BrandSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6135182D653423007C73E8 /* BrandSlider.swift */; };
 		ED6436DA2D7E0650000FCE50 /* BackgroundToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6436D92D7E0650000FCE50 /* BackgroundToolView.swift */; };
@@ -50,7 +54,7 @@
 		ED8382CE2D62883E006CAC70 /* EditorTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8382CD2D62883E006CAC70 /* EditorTutorialView.swift */; };
 		ED8382D02D628A9C006CAC70 /* TutorialTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8382CF2D628A9C006CAC70 /* TutorialTip.swift */; };
 		ED8382D22D629931006CAC70 /* TipCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8382D12D629931006CAC70 /* TipCellView.swift */; };
-		ED92A7C52D6B784000E661B2 /* GenerationTextFIeld.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7C42D6B784000E661B2 /* GenerationTextFIeld.swift */; };
+		ED92A7C52D6B784000E661B2 /* GenerationTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7C42D6B784000E661B2 /* GenerationTextField.swift */; };
 		ED92A7C92D6B81A400E661B2 /* CardLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7C82D6B81A400E661B2 /* CardLibraryView.swift */; };
 		ED92A7CB2D6B845900E661B2 /* ProjectCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7CA2D6B845900E661B2 /* ProjectCardView.swift */; };
 		ED92A7CD2D6BB9C100E661B2 /* NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7CC2D6BB9C100E661B2 /* NavigationContent.swift */; };
@@ -95,10 +99,13 @@
 		ED426AFB2D5D3D0D00D92CB3 /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
 		ED426AFD2D5D3F8800D92CB3 /* MazzardH-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MazzardH-Bold.otf"; sourceTree = "<group>"; };
 		ED426B002D5D3FEB00D92CB3 /* YellowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YellowButton.swift; sourceTree = "<group>"; };
+		ED59ED0F2D90A8D5001EF0A2 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		ED59ED112D90A935001EF0A2 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		ED5ABF3D2D748BEE0086AD82 /* BrushPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrushPath.swift; sourceTree = "<group>"; };
 		ED5ABF412D74E69C0086AD82 /* EditorTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTab.swift; sourceTree = "<group>"; };
 		ED5ABF432D74E7590086AD82 /* EditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewModel.swift; sourceTree = "<group>"; };
 		ED5ABF452D74EB0F0086AD82 /* RoundedCornerShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCornerShape.swift; sourceTree = "<group>"; };
+		ED60D80B2D960D3100D6A5B6 /* RenderingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderingCanvasView.swift; sourceTree = "<group>"; };
 		ED6135162D653182007C73E8 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		ED6135182D653423007C73E8 /* BrandSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandSlider.swift; sourceTree = "<group>"; };
 		ED6436D92D7E0650000FCE50 /* BackgroundToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundToolView.swift; sourceTree = "<group>"; };
@@ -107,7 +114,7 @@
 		ED8382CD2D62883E006CAC70 /* EditorTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTutorialView.swift; sourceTree = "<group>"; };
 		ED8382CF2D628A9C006CAC70 /* TutorialTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialTip.swift; sourceTree = "<group>"; };
 		ED8382D12D629931006CAC70 /* TipCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipCellView.swift; sourceTree = "<group>"; };
-		ED92A7C42D6B784000E661B2 /* GenerationTextFIeld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationTextFIeld.swift; sourceTree = "<group>"; };
+		ED92A7C42D6B784000E661B2 /* GenerationTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationTextField.swift; sourceTree = "<group>"; };
 		ED92A7C82D6B81A400E661B2 /* CardLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardLibraryView.swift; sourceTree = "<group>"; };
 		ED92A7CA2D6B845900E661B2 /* ProjectCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCardView.swift; sourceTree = "<group>"; };
 		ED92A7CC2D6BB9C100E661B2 /* NavigationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContent.swift; sourceTree = "<group>"; };
@@ -123,6 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED5B37672D92152D002C8773 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +241,7 @@
 		ED426AE52D5D317700D92CB3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				ED59ED0F2D90A8D5001EF0A2 /* UIImage+Extension.swift */,
 				ED426AFB2D5D3D0D00D92CB3 /* Font+Extension.swift */,
 				ED426AF42D5D324A00D92CB3 /* DeviceInfo.swift */,
 				ED426AF22D5D323200D92CB3 /* ScreenSize.swift */,
@@ -261,7 +270,7 @@
 				ED92A7CC2D6BB9C100E661B2 /* NavigationContent.swift */,
 				ED426B002D5D3FEB00D92CB3 /* YellowButton.swift */,
 				ED6135182D653423007C73E8 /* BrandSlider.swift */,
-				ED92A7C42D6B784000E661B2 /* GenerationTextFIeld.swift */,
+				ED92A7C42D6B784000E661B2 /* GenerationTextField.swift */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -279,6 +288,7 @@
 		ED5ABF3F2D748C020086AD82 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ED60D80B2D960D3100D6A5B6 /* RenderingCanvasView.swift */,
 				ED954A692D7CE78C00675A3A /* Tools */,
 				ED8382CC2D62881E006CAC70 /* Tutorial */,
 				ED6135162D653182007C73E8 /* EditorView.swift */,
@@ -290,6 +300,7 @@
 			isa = PBXGroup;
 			children = (
 				ED5ABF432D74E7590086AD82 /* EditorViewModel.swift */,
+				ED59ED112D90A935001EF0A2 /* APIManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -366,6 +377,7 @@
 			);
 			name = PhotoEditor;
 			packageProductDependencies = (
+				ED5B37662D92152D002C8773 /* Alamofire */,
 			);
 			productName = PhotoEditor;
 			productReference = ED426A8E2D5D284000D92CB3 /* PhotoEditor.app */;
@@ -395,6 +407,9 @@
 			);
 			mainGroup = ED426A852D5D284000D92CB3;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				ED5B37652D92152D002C8773 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = ED426A8F2D5D284000D92CB3 /* Products */;
 			projectDirPath = "";
@@ -449,9 +464,11 @@
 				ED8382D22D629931006CAC70 /* TipCellView.swift in Sources */,
 				ED5ABF442D74E7590086AD82 /* EditorViewModel.swift in Sources */,
 				ED5ABF3E2D748BEE0086AD82 /* BrushPath.swift in Sources */,
+				ED60D80C2D960D3100D6A5B6 /* RenderingCanvasView.swift in Sources */,
 				ED426AF72D5D329200D92CB3 /* OnboardingItem.swift in Sources */,
 				ED92A7CB2D6B845900E661B2 /* ProjectCardView.swift in Sources */,
 				ED426AF32D5D323200D92CB3 /* ScreenSize.swift in Sources */,
+				ED59ED122D90A935001EF0A2 /* APIManager.swift in Sources */,
 				ED92A7D22D6BC0A400E661B2 /* DefaultBackground.swift in Sources */,
 				ED92A7D42D6BC77600E661B2 /* BorderedButton.swift in Sources */,
 				ED8382CA2D62763F006CAC70 /* SportKind.swift in Sources */,
@@ -469,8 +486,9 @@
 				ED426AA62D5D293500D92CB3 /* PhotoEditorApp.swift in Sources */,
 				ED8382D02D628A9C006CAC70 /* TutorialTip.swift in Sources */,
 				ED92A7D02D6BC08500E661B2 /* UploadPhotoView.swift in Sources */,
-				ED92A7C52D6B784000E661B2 /* GenerationTextFIeld.swift in Sources */,
+				ED92A7C52D6B784000E661B2 /* GenerationTextField.swift in Sources */,
 				ED6135172D653182007C73E8 /* EditorView.swift in Sources */,
+				ED59ED102D90A8D5001EF0A2 /* UIImage+Extension.swift in Sources */,
 				ED6436DA2D7E0650000FCE50 /* BackgroundToolView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -691,6 +709,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		ED5B37652D92152D002C8773 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		ED5B37662D92152D002C8773 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED5B37652D92152D002C8773 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = ED426A862D5D284000D92CB3 /* Project object */;
 }

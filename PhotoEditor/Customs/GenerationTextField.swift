@@ -5,13 +5,13 @@
 
 import SwiftUI
 
-struct GenerationTextFIeld: View {
+struct GenerationTextField: View {
     
+    @State private var text: String = ""
     let placeholder: String
-    @Binding var text: String
-    let onGenerate: () -> Void
+    let onGenerate: (String) -> Void
     
-    @FocusState var isEditing: Bool
+    @FocusState private var isEditing: Bool
     
     var body: some View {
         HStack(spacing: 8.adaptive()) {
@@ -21,7 +21,9 @@ struct GenerationTextFIeld: View {
                 .autocorrectionDisabled()
                 .lineLimit(1)
             
-            Button(action: onGenerate) {
+            Button {
+                onGenerate(text)
+            } label: {
                 Text("Generate")
                     .font(.poppins(14.adaptive()))
                     .foregroundStyle(.black)
@@ -30,7 +32,7 @@ struct GenerationTextFIeld: View {
                     .background(LinearGradient.yellow)
                     .clipShape(.rect(cornerRadius: 10.adaptive()))
             }
-
+            .disabled(text.isEmpty)
         }
         .padding(.vertical, 5.adaptive())
         .padding(.leading, 15.adaptive())

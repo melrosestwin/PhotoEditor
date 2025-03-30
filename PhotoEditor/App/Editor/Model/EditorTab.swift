@@ -41,4 +41,12 @@ enum EditorTab: Int, CaseIterable {
         case .size: ""
         }
     }
+    
+    var initialPrompt: String {
+        switch self {
+        case .insert: "Add an object using next description: "
+        case .outfit: "Change outfit using next description: "
+        default: ""
+        }
+    }
 }

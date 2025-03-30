@@ -24,80 +24,81 @@ enum BackgroundType: Equatable {
     
     case color(Color)
     case image(UIImage)
+    case prompt(String)
+    case clear
 }
 
 struct BackgroundToolView<GenerativeContent: View>: View {
     
     @State private var pickerItem: PhotosPickerItem?
-    
     @State private var userImages: [UIImage] = []
+    
     private let templateImages: [UIImage] = SportKind.soccer.backgrounds.map({ UIImage(resource: $0) })
     private let templateColors: [[Color]] = [
         [.white, .red, .darkBlue, .yellow],
         [.lightBlue, .green, .pink, .orange]
     ]
     
-    @State private var selectedType: BackgroundTab = .image
     @State private var selectedBackground: BackgroundType?
     
-    let sport: SportKind
-    let onChange: (BackgroundType) -> Void
-    let onClose: () -> Void
-    let onSave: () -> Void
+    @ObservedObject var vm: EditorViewModel
     let content: GenerativeContent
     
     init(
-        sport: SportKind,
-        onChange: @escaping (BackgroundType) -> Void,
-        onClose: @escaping () -> Void,
-        onSave: @escaping () -> Void,
+        vm: EditorViewModel,
         @ViewBuilder content: @escaping () -> GenerativeContent
     ) {
-        self.sport = sport
-        self.onChange = onChange
-        self.onClose = onClose
-        self.onSave = onSave
+        self.vm = vm
         self.content = content()
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 12.adaptive()) {
             HStack(spacing: 0) {
-                Button(action: onClose) {
+                Button {
+                    vm.cancelLastChanges()
+                } label: {
                     Image(.crossButton)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 34.adaptive(), height: 34.adaptive())
                 }
+                .disabled(vm.editingImage == nil)
+                .opacity(vm.editingImage == nil ? 0 : 1)
                 
                 Spacer()
                 
                 ForEach(BackgroundTab.allCases, id: \.self) { type in
                     Text(type.title)
                         .font(.poppins(13.adaptive()))
-                        .foregroundStyle(selectedType == type ? .lightYellow : .white)
+                        .foregroundStyle(vm.backgroundTab == type ? .lightYellow : .white)
                         .contentShape(.rect)
                         .onTapGesture {
-                            selectedType = type
+                            vm.backgroundTab = type
                         }
                 
                     Spacer()
                 }
                 
-                Button(action: onSave) {
+                Button {
+                    vm.saveLastChanges()
+                } label: {
                     Image(.checkButton)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 34.adaptive(), height: 34.adaptive())
                 }
+                .disabled(vm.editingImage == nil)
+                .opacity(vm.editingImage == nil ? 0 : 1)
             }
-            .padding(.horizontal, 16.adaptive())
             
-            switch selectedType {
+            switch vm.backgroundTab {
             case .color:
+                Spacer(minLength: 0)
                 colorsView
                     .frame(height: 104.adaptive())
             case .image:
+                Spacer(minLength: 0)
                 imagesView
                     .frame(height: 104.adaptive())
             case .generated:
@@ -109,6 +110,7 @@ struct BackgroundToolView<GenerativeContent: View>: View {
     var colorsView: some View {
         HStack(spacing: 20.adaptive()) {
             Button {
+                vm.changeBackground(.clear)
                 selectedBackground = nil
             } label: {
                 RoundedRectangle(cornerRadius: 10.adaptive(), style: .continuous)
@@ -137,6 +139,7 @@ struct BackgroundToolView<GenerativeContent: View>: View {
                                     }
                                 }
                                 .onTapGesture {
+                                    vm.changeBackground(.color(color))
                                     selectedBackground = .color(color)
                                 }
                         }
@@ -188,6 +191,7 @@ struct BackgroundToolView<GenerativeContent: View>: View {
                             }
                         }
                         .onTapGesture {
+                            vm.changeBackground(.image(uiImage))
                             selectedBackground = .image(uiImage)
                         }
                 }
