@@ -12,9 +12,9 @@ struct UploadPhotoView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var pickerItem: PhotosPickerItem?
-    @State private var image: Image?
+    @State private var image: UIImage?
     
-    let onSelect: (Image) -> Void
+    let onSelect: (UIImage) -> Void
     
     var body: some View {
         VStack(spacing: 0) {
@@ -38,7 +38,7 @@ struct UploadPhotoView: View {
                         .opacity(0.65)
                         .overlay {
                             if let image {
-                                image
+                                Image(uiImage: image)
                                     .resizable()
                                     .scaledToFill()
                             } else {
@@ -82,8 +82,8 @@ struct UploadPhotoView: View {
             .onChange(of: pickerItem) { item in
                 guard let item else { return }
                 Task {
-                    if let loaded = try? await item.loadTransferable(type: Image.self) {
-                        image = loaded
+                    if let data = try? await item.loadTransferable(type: Data.self) {
+                        image = UIImage(data: data)
                     } else {
                         print("Failed")
                     }

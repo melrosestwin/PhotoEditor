@@ -30,8 +30,14 @@ enum BackgroundType: Equatable {
 
 struct BackgroundToolView<GenerativeContent: View>: View {
     
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(sortDescriptors: []) private var importedImages: FetchedResults<StoredImage>
+    
     @State private var pickerItem: PhotosPickerItem?
-    @State private var userImages: [UIImage] = []
+    
+    private var userImages: [UIImage] {
+        return importedImages.compactMap(\.uiImage)
+    }
     
     private let templateImages: [UIImage] = SportKind.soccer.backgrounds.map({ UIImage(resource: $0) })
     private let templateColors: [[Color]] = [
@@ -64,7 +70,7 @@ struct BackgroundToolView<GenerativeContent: View>: View {
                         .frame(width: 34.adaptive(), height: 34.adaptive())
                 }
                 .disabled(vm.editingImage == nil)
-                .opacity(vm.editingImage == nil ? 0 : 1)
+                .opacity(vm.editingImage == nil ? 0.5 : 1)
                 
                 Spacer()
                 
@@ -89,20 +95,19 @@ struct BackgroundToolView<GenerativeContent: View>: View {
                         .frame(width: 34.adaptive(), height: 34.adaptive())
                 }
                 .disabled(vm.editingImage == nil)
-                .opacity(vm.editingImage == nil ? 0 : 1)
+                .opacity(vm.editingImage == nil ? 0.5 : 1)
             }
+            .padding(.horizontal, 16.adaptive())
+            .padding(.bottom, 4.adaptive())
             
             switch vm.backgroundTab {
             case .color:
-                Spacer(minLength: 0)
                 colorsView
-                    .frame(height: 104.adaptive())
             case .image:
-                Spacer(minLength: 0)
                 imagesView
-                    .frame(height: 104.adaptive())
             case .generated:
                 content
+                    .padding(.horizontal, 16.adaptive())
             }
         }
     }
@@ -169,12 +174,19 @@ struct BackgroundToolView<GenerativeContent: View>: View {
                 .onChange(of: pickerItem) { item in
                     guard let item else { return }
                     Task {
-                        if let data = try? await item.loadTransferable(type: Data.self),
-                           let image = UIImage(data: data) {
-                            userImages.append(image)
+                        if let data = try? await item.loadTransferable(type: Data.self) {
+                            let storedImage = StoredImage(context: viewContext)
+                            storedImage.data = data
+                            
+                            if viewContext.hasChanges {
+                                withAnimation {
+                                    try! viewContext.save()
+                                }
+                            }
                         } else {
                             print("Failed")
                         }
+                        pickerItem = nil
                     }
                 }
 

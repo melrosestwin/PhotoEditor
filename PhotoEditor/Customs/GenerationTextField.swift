@@ -8,6 +8,7 @@ import SwiftUI
 struct GenerationTextField: View {
     
     @State private var text: String = ""
+    @Binding var isFocused: Bool
     let placeholder: String
     let onGenerate: (String) -> Void
     
@@ -20,6 +21,7 @@ struct GenerationTextField: View {
                 .foregroundStyle(.white.opacity(0.85))
                 .autocorrectionDisabled()
                 .lineLimit(1)
+                .focused($isEditing)
             
             Button {
                 onGenerate(text)
@@ -39,6 +41,9 @@ struct GenerationTextField: View {
         .padding(.trailing, 9.adaptive())
         .background(.white.opacity(0.28))
         .clipShape(.rect(cornerRadius: 10.adaptive()))
+        .onChange(of: isEditing) { newValue in
+            isFocused = newValue
+        }
         .onTapGesture {
             isEditing = true
         }

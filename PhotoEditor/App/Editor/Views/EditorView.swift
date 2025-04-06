@@ -7,72 +7,82 @@ import SwiftUI
 
 struct EditorView: View {
     
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
     @StateObject var vm: EditorViewModel
+    
+    init(project: Project) {
+        self._vm = StateObject(wrappedValue: EditorViewModel(project: project))
+    }
     
     init(image: UIImage, sportKind: SportKind) {
         self._vm = StateObject(wrappedValue: EditorViewModel(image: image, sportKind: sportKind))
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            
-            VStack(alignment: .center, spacing: 0) {
-                Spacer(minLength: 0)
-                Image(uiImage: vm.editingImage ?? vm.lastImage)
-                    .resizable()
-                    .scaledToFit()
-                    .overlay {
-                        if vm.selectedTab == .insert || vm.selectedTab == .outfit {
-                            Canvas { context, size in
-                                context.blendMode = .destinationAtop
-                                vm.canvasPaths.forEach { path in
-                                    context.stroke(path.path, with: .color(path.tool.color), style: .init(lineWidth: path.lineWidth, lineCap: .round, lineJoin: .round))
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 0) {
+                VStack(alignment: .center, spacing: 0) {
+                    Spacer(minLength: 0)
+                    Image(uiImage: vm.editingImage ?? vm.lastImage)
+                        .resizable()
+                        .scaledToFit()
+                        .overlay {
+                            if vm.selectedTab == .insert || vm.selectedTab == .outfit {
+                                Canvas { context, size in
+                                    context.blendMode = .destinationAtop
+                                    vm.canvasPaths.forEach { path in
+                                        context.stroke(path.path, with: .color(path.tool.color), style: .init(lineWidth: path.lineWidth, lineCap: .round, lineJoin: .round))
+                                    }
+                                    context.stroke(vm.currentPath, with: .color(vm.selectedTool.color), style: .init(lineWidth: vm.brushWidth, lineCap: .round, lineJoin: .round))
                                 }
-                                context.stroke(vm.currentPath, with: .color(vm.selectedTool.color), style: .init(lineWidth: vm.brushWidth, lineCap: .round, lineJoin: .round))
+                                .gesture(
+                                    DragGesture()
+                                        .onChanged(vm.onBrushChange(_:))
+                                        .onEnded(vm.onBrushEnd(_:))
+                                )
                             }
-                            .gesture(
-                                DragGesture()
-                                    .onChanged(vm.onBrushChange(_:))
-                                    .onEnded(vm.onBrushEnd(_:))
-                            )
                         }
+                    Spacer(minLength: 0)
                 }
-                Spacer(minLength: 0)
+                .frame(maxWidth: .infinity)
+                .overlay(alignment: .bottom) {
+                    editingTools
+                        .padding(.horizontal, 16.adaptive())
+                        .padding(.bottom, 10.adaptive())
+                }
+                .overlay {
+                    if vm.isLoading {
+                        loadingView
+                    }
+                }
+                .border(.red)
+                
+                currentToolView
+                
+                toolBar
             }
-            .frame(maxWidth: .infinity)
-            .overlay(alignment: .bottom) {
-                editingTools
-                    .padding(.horizontal, 16.adaptive())
-                    .padding(.bottom, 10.adaptive())
+            .frame(minWidth: 0, maxWidth: .infinity)
+            .background {
+                Image(.secondaryBackground)
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
             }
+            .frame(height: UIScreen.main.bounds.height - safeAreaInsets.bottom)
             .overlay {
-                if vm.isLoading {
-                    loadingView
-                }
-            }
-            .border(.red)
-            
-            currentToolView
-            
-            toolBar
-        }
-        .frame(minWidth: 0, maxWidth: .infinity)
-        .background {
-            Image(.secondaryBackground)
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
-        }
-        .ignoresSafeArea(edges: .top)
-        .overlay {
-            if vm.showTutorial {
-                EditorTutorialView(tips: TutorialTip.editorTips, showFinalButton: true) {
-                    withAnimation {
-                        vm.showTutorial = false
+                if vm.showTutorial {
+                    EditorTutorialView(tips: TutorialTip.editorTips, showFinalButton: true) {
+                        withAnimation {
+                            vm.showTutorial = false
+                        }
                     }
                 }
             }
         }
+        .scrollDisabled(!vm.isFocused)
+        .ignoresSafeArea(edges: .top)
         .navigationContent(title: "") {
             navigationTrailingButtons
         }
@@ -104,7 +114,7 @@ struct EditorView: View {
             
             Spacer()
             
-            if vm.selectedTab != .size {
+            if vm.selectedTab == .insert || vm.selectedTab == .outfit {
                 ForEach(CanvasTool.allCases, id: \.self) { tool in
                     Image(tool.icon)
                         .resizable()
@@ -130,17 +140,53 @@ struct EditorView: View {
                 
             case .size:
                 CropToolView(vm: vm)
+                    .padding(.horizontal, 16.adaptive())
                 
                 Spacer()
-            default:
-                BrandSlider(value: $vm.sliderValue)
+            case .insert:
+                cancelSaveButtons
+                    .padding(.horizontal, 16.adaptive())
                 
                 generationField
+                    .padding(.horizontal, 16.adaptive())
+            case .outfit:
+                cancelSaveButtons
+                    .padding(.horizontal, 16.adaptive())
+                
+                generationField
+                    .padding(.horizontal, 16.adaptive())
             }
         }
         .padding(.vertical, 16.adaptive())
-        .frame(height: 210.adaptive())
-        .padding(.horizontal, 16.adaptive())
+        .frame(height: 180.adaptive())
+    }
+    
+    var cancelSaveButtons: some View {
+        HStack(spacing: 12.adaptive()) {
+            Button {
+                vm.cancelLastChanges()
+            } label: {
+                Image(.crossButton)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 34.adaptive(), height: 34.adaptive())
+            }
+            .disabled(vm.editingImage == nil)
+            .opacity(vm.editingImage == nil ? 0.5 : 1)
+            
+            BrandSlider(value: $vm.sliderValue)
+            
+            Button {
+                vm.saveLastChanges()
+            } label: {
+                Image(.checkButton)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 34.adaptive(), height: 34.adaptive())
+            }
+            .disabled(vm.editingImage == nil)
+            .opacity(vm.editingImage == nil ? 0.5 : 1)
+        }
     }
     
     var generationField: some View {
@@ -152,7 +198,7 @@ struct EditorView: View {
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            GenerationTextField(placeholder: vm.selectedTab.generatorPlaceholder) { prompt in
+            GenerationTextField(isFocused: $vm.isFocused, placeholder: vm.selectedTab.generatorPlaceholder) { prompt in
                 switch vm.selectedTab {
                 case .background:
                     vm.changeBackground(.prompt(prompt))
@@ -161,8 +207,7 @@ struct EditorView: View {
                 case .size: break
                 }
             }
-            
-            Spacer(minLength: 0)
+            .ignoresSafeArea(.keyboard)
         }
     }
     
@@ -230,21 +275,26 @@ struct EditorView: View {
     var navigationTrailingButtons: some View {
         HStack(spacing: 8.adaptive()) {
             Button {
-                
+                deleteProject()
             } label: {
                 Image(.delete)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 34.adaptive(), height: 34.adaptive())
             }
+            .disabled(vm.imageHistory.isEmpty)
+            .opacity(vm.imageHistory.isEmpty ? 0.5 : 1)
+            
             Button {
-                
+                saveProject()
             } label: {
                 Image(.save)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 34.adaptive(), height: 34.adaptive())
             }
+            .disabled(vm.imageHistory.isEmpty)
+            .opacity(vm.imageHistory.isEmpty ? 0.5 : 1)
         }
         .padding(.trailing, 8.adaptive())
     }
@@ -255,6 +305,40 @@ struct EditorView: View {
             .overlay {
                 ProgressView()
             }
+    }
+    
+    func deleteProject() {
+        if let id = vm.projectId, let existingProject = try? viewContext.existingObject(with: id) as? Project {
+            viewContext.delete(existingProject)
+            saveChanges()
+        }
+        dismiss()
+    }
+    
+    func saveProject() {
+        var project: Project
+        if let id = vm.projectId, let existingProject = try? viewContext.existingObject(with: id) as? Project {
+            project = existingProject
+        } else {
+            project = Project(context: viewContext)
+            project.dateCreate = Date()
+        }
+        project.originalImage = vm.originalImage
+        project.sportKind = vm.sportKind
+        project.history = vm.imageHistory
+        project.dateChange = Date()
+        
+        saveChanges()
+    }
+    
+    func saveChanges() {
+        if viewContext.hasChanges {
+            do {
+                try viewContext.save()
+            } catch {
+                print(error)
+            }
+        }
     }
 }
 

@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 enum EditingStep: Int, CaseIterable {
     case tip
@@ -16,8 +17,9 @@ final class EditorViewModel: ObservableObject {
     
     let apiManager: APIManager = APIManager()
     
+    var projectId: NSManagedObjectID? = nil
     let sportKind: SportKind
-    var originalImage: UIImage
+    let originalImage: UIImage
     
     // LAYOUT
     @Published var selectedTab: EditorTab = .background
@@ -25,6 +27,7 @@ final class EditorViewModel: ObservableObject {
     @Published var showBrushTip: Bool = false
     @Published var showTutorial: Bool = false
     @Published var isLoading: Bool = false
+    @Published var isFocused: Bool = false
     
     // CANVAS
     @Published var canvasPaths: [BrushPath] = []
@@ -49,6 +52,13 @@ final class EditorViewModel: ObservableObject {
     init(image: UIImage, sportKind: SportKind) {
         self.originalImage = image
         self.sportKind = sportKind
+    }
+    
+    init(project: Project) {
+        self.originalImage = project.originalImage ?? UIImage(resource: .tipBanner4)
+        self.sportKind = project.sportKind
+        self.projectId = project.objectID
+        self.imageHistory = project.history
     }
     
     var currentPath: Path {
@@ -104,7 +114,8 @@ final class EditorViewModel: ObservableObject {
     func inpaint(prompt: String) {
         let image = editingImage ?? lastImage
         let text = selectedTab.initialPrompt + prompt
-        let mask = ImageRenderer(content: RenderingCanvasView(paths: canvasPaths)).uiImage
+        let mask = ImageRenderer(content: RenderingCanvasView(paths: canvasPaths)
+            .frame(width: image.size.width, height: image.size.height)).uiImage
         Task {
             do {
                 isLoading = true

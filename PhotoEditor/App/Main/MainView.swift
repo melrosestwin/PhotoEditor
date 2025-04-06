@@ -71,6 +71,8 @@ struct MainView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
+        .environment(\.managedObjectContext, DataController.shared.container.viewContext)
     }
     
     var pageButtons: some View {

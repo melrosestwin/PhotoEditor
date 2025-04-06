@@ -9,7 +9,7 @@ import UIKit
 
 class APIManager {
     
-    private let apiKey: String = "sk-wOFKcETOSAwejwOOjSFwWKM4uN5zzllKfHUFS2sCJumajs7H"
+    private let apiKey: String = "sk-38kRMfTvIQD3ZMwsfgBEpiXX9fC0628ihQVbPlTLWzMvDeaY"
     private let baseURL: String = "https://api.stability.ai/v2beta"
     
     func fetchResults(generationId: String) async throws -> Data {

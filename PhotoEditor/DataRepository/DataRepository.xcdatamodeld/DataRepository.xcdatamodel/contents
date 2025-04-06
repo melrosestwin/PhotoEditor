@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="24D81" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="Project" representedClassName="Project" syncable="YES" codeGenerationType="class">
+        <attribute name="dateChange" attributeType="Date" usesScalarValueType="NO" customClassName="StoredImage"/>
+        <attribute name="dateCreate" attributeType="Date" usesScalarValueType="NO" customClassName="StoredImage"/>
+        <attribute name="historyData" attributeType="Transformable" valueTransformerName="" customClassName="[Data]"/>
+        <attribute name="originalImageData" attributeType="Binary" valueTransformerName="" customClassName="StoredImage"/>
+        <attribute name="sportKindId" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="StoredImage" representedClassName="StoredImage" syncable="YES" codeGenerationType="class">
+        <attribute name="data" attributeType="Binary"/>
+    </entity>
+</model>

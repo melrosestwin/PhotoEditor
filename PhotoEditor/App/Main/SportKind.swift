@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-enum SportKind: Int, CaseIterable {
+public enum SportKind: Int16, CaseIterable {
     case soccer
     case boxing
     case cricket

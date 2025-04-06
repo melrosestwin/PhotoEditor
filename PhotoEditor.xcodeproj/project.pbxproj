@@ -54,6 +54,10 @@
 		ED8382CE2D62883E006CAC70 /* EditorTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8382CD2D62883E006CAC70 /* EditorTutorialView.swift */; };
 		ED8382D02D628A9C006CAC70 /* TutorialTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8382CF2D628A9C006CAC70 /* TutorialTip.swift */; };
 		ED8382D22D629931006CAC70 /* TipCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8382D12D629931006CAC70 /* TipCellView.swift */; };
+		ED8AAA5C2D9B4CD50078AC1E /* SafeAreaInsetsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AAA5B2D9B4CD50078AC1E /* SafeAreaInsetsKey.swift */; };
+		ED8AAA612D9B4D5A0078AC1E /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AAA5D2D9B4D5A0078AC1E /* DataController.swift */; };
+		ED8AAA622D9B4D5A0078AC1E /* DataRepository.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = ED8AAA5E2D9B4D5A0078AC1E /* DataRepository.xcdatamodeld */; };
+		ED8AAA642D9B502C0078AC1E /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AAA632D9B502C0078AC1E /* Data+Extension.swift */; };
 		ED92A7C52D6B784000E661B2 /* GenerationTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7C42D6B784000E661B2 /* GenerationTextField.swift */; };
 		ED92A7C92D6B81A400E661B2 /* CardLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7C82D6B81A400E661B2 /* CardLibraryView.swift */; };
 		ED92A7CB2D6B845900E661B2 /* ProjectCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7CA2D6B845900E661B2 /* ProjectCardView.swift */; };
@@ -114,6 +118,10 @@
 		ED8382CD2D62883E006CAC70 /* EditorTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTutorialView.swift; sourceTree = "<group>"; };
 		ED8382CF2D628A9C006CAC70 /* TutorialTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialTip.swift; sourceTree = "<group>"; };
 		ED8382D12D629931006CAC70 /* TipCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipCellView.swift; sourceTree = "<group>"; };
+		ED8AAA5B2D9B4CD50078AC1E /* SafeAreaInsetsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeAreaInsetsKey.swift; sourceTree = "<group>"; };
+		ED8AAA5D2D9B4D5A0078AC1E /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		ED8AAA602D9B4D5A0078AC1E /* DataRepository.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataRepository.xcdatamodel; sourceTree = "<group>"; };
+		ED8AAA632D9B502C0078AC1E /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		ED92A7C42D6B784000E661B2 /* GenerationTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationTextField.swift; sourceTree = "<group>"; };
 		ED92A7C82D6B81A400E661B2 /* CardLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardLibraryView.swift; sourceTree = "<group>"; };
 		ED92A7CA2D6B845900E661B2 /* ProjectCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCardView.swift; sourceTree = "<group>"; };
@@ -157,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				ED426AD82D5D2E9100D92CB3 /* Info.plist */,
+				ED8AAA5F2D9B4D5A0078AC1E /* DataRepository */,
 				ED426AAB2D5D2C8A00D92CB3 /* Configuration */,
 				ED426AAA2D5D2C8600D92CB3 /* App */,
 				ED426AA92D5D2C7900D92CB3 /* Resources */,
@@ -241,6 +250,7 @@
 		ED426AE52D5D317700D92CB3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				ED8AAA5B2D9B4CD50078AC1E /* SafeAreaInsetsKey.swift */,
 				ED59ED0F2D90A8D5001EF0A2 /* UIImage+Extension.swift */,
 				ED426AFB2D5D3D0D00D92CB3 /* Font+Extension.swift */,
 				ED426AF42D5D324A00D92CB3 /* DeviceInfo.swift */,
@@ -332,6 +342,16 @@
 				ED8382CD2D62883E006CAC70 /* EditorTutorialView.swift */,
 			);
 			path = Tutorial;
+			sourceTree = "<group>";
+		};
+		ED8AAA5F2D9B4D5A0078AC1E /* DataRepository */ = {
+			isa = PBXGroup;
+			children = (
+				ED8AAA632D9B502C0078AC1E /* Data+Extension.swift */,
+				ED8AAA5D2D9B4D5A0078AC1E /* DataController.swift */,
+				ED8AAA5E2D9B4D5A0078AC1E /* DataRepository.xcdatamodeld */,
+			);
+			path = DataRepository;
 			sourceTree = "<group>";
 		};
 		ED92A7C72D6B819200E661B2 /* CardLibrary */ = {
@@ -465,8 +485,11 @@
 				ED5ABF442D74E7590086AD82 /* EditorViewModel.swift in Sources */,
 				ED5ABF3E2D748BEE0086AD82 /* BrushPath.swift in Sources */,
 				ED60D80C2D960D3100D6A5B6 /* RenderingCanvasView.swift in Sources */,
+				ED8AAA642D9B502C0078AC1E /* Data+Extension.swift in Sources */,
 				ED426AF72D5D329200D92CB3 /* OnboardingItem.swift in Sources */,
 				ED92A7CB2D6B845900E661B2 /* ProjectCardView.swift in Sources */,
+				ED8AAA612D9B4D5A0078AC1E /* DataController.swift in Sources */,
+				ED8AAA622D9B4D5A0078AC1E /* DataRepository.xcdatamodeld in Sources */,
 				ED426AF32D5D323200D92CB3 /* ScreenSize.swift in Sources */,
 				ED59ED122D90A935001EF0A2 /* APIManager.swift in Sources */,
 				ED92A7D22D6BC0A400E661B2 /* DefaultBackground.swift in Sources */,
@@ -488,6 +511,7 @@
 				ED92A7D02D6BC08500E661B2 /* UploadPhotoView.swift in Sources */,
 				ED92A7C52D6B784000E661B2 /* GenerationTextField.swift in Sources */,
 				ED6135172D653182007C73E8 /* EditorView.swift in Sources */,
+				ED8AAA5C2D9B4CD50078AC1E /* SafeAreaInsetsKey.swift in Sources */,
 				ED59ED102D90A8D5001EF0A2 /* UIImage+Extension.swift in Sources */,
 				ED6436DA2D7E0650000FCE50 /* BackgroundToolView.swift in Sources */,
 			);
@@ -728,6 +752,19 @@
 			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		ED8AAA5E2D9B4D5A0078AC1E /* DataRepository.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				ED8AAA602D9B4D5A0078AC1E /* DataRepository.xcdatamodel */,
+			);
+			currentVersion = ED8AAA602D9B4D5A0078AC1E /* DataRepository.xcdatamodel */;
+			path = DataRepository.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = ED426A862D5D284000D92CB3 /* Project object */;
 }

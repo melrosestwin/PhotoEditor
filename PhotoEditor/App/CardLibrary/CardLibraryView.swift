@@ -4,12 +4,14 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct CardLibraryView: View {
     
     @State private var showTutorial: Bool = false
     
-    @State private var recentProjects: [Image] = []
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Project>
 
     let sport: SportKind
     
@@ -55,8 +57,9 @@ struct CardLibraryView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16.adaptive()) {
-                    ForEach(0..<recentProjects.count, id: \.self) { index in
-                        ProjectCardView(image: recentProjects[index])
+                    ForEach(projects, id: \.self) { project in
+                        let image = project.history.last ?? project.originalImage ?? UIImage(resource: .tipBanner4)
+                        ProjectCardView(image: image)
                     }
                     
                     createButton
@@ -64,7 +67,7 @@ struct CardLibraryView: View {
                 .padding(.horizontal, 32.adaptive())
             }
             .frame(height: 172.adaptive())
-            .scrollDisabled(recentProjects.isEmpty)
+            .scrollDisabled(projects.isEmpty)
         }
     }
     
@@ -93,8 +96,21 @@ struct CardLibraryView: View {
     var createButton: some View {
         NavigationLink {
             UploadPhotoView { image in
-                withAnimation {
-                    recentProjects.append(image)
+                let project = Project(context: viewContext)
+                project.dateCreate = Date()
+                project.dateChange = Date()
+                project.originalImage = image
+                project.history = []
+                project.sportKind = sport
+                
+                if viewContext.hasChanges {
+                    withAnimation {
+                        do {
+                            try viewContext.save()
+                        } catch {
+                            print(error)
+                        }
+                    }
                 }
             }
         } label: {

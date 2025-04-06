@@ -28,9 +28,9 @@ enum CropType: Int, CaseIterable {
     
     var cardSize: CGSize {
         switch self {
-        case .square: CGSize(width: 80.adaptive(), height: 80.adaptive())
-        case .vertical: CGSize(width: 80.adaptive(), height: 100.adaptive())
-        case .horizontal: CGSize(width: 100.adaptive(), height: 80.adaptive())
+        case .square: CGSize(width: 72.adaptive(), height: 72.adaptive())
+        case .vertical: CGSize(width: 72.adaptive(), height: 90.adaptive())
+        case .horizontal: CGSize(width: 90.adaptive(), height: 72.adaptive())
         }
     }
 }
@@ -42,7 +42,7 @@ struct CropToolView: View {
     @ObservedObject var vm: EditorViewModel
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack(spacing: 0) {
                 Button {
                     cropType = nil
@@ -54,7 +54,7 @@ struct CropToolView: View {
                         .frame(width: 34.adaptive(), height: 34.adaptive())
                 }
                 .disabled(vm.editingImage == nil)
-                .opacity(vm.editingImage == nil ? 0 : 1)
+                .opacity(vm.editingImage == nil ? 0.5 : 1)
                 
                 Spacer()
                 
@@ -68,8 +68,10 @@ struct CropToolView: View {
                         .frame(width: 34.adaptive(), height: 34.adaptive())
                 }
                 .disabled(vm.editingImage == nil)
-                .opacity(vm.editingImage == nil ? 0 : 1)
+                .opacity(vm.editingImage == nil ? 0.5 : 1)
             }
+            
+            Spacer(minLength: 0)
             
             HStack(alignment: .bottom, spacing: 17.adaptive()) {
                 Spacer(minLength: 0)
