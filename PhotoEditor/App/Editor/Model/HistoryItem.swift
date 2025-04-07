@@ -1,9 +1,14 @@
-import Foundation
+//
+//  HistoryItem.swift
+//  PhotoEditor
+//
+
+import UIKit
 import CoreData
 
-class HistoryItem: NSObject, NSCoding, Identifiable {
-    var id: UUID = UUID()
-    var image: UIImage
+public class HistoryItem: NSObject, NSCoding, Identifiable {
+    public var id: UUID = UUID()
+    public var image: UIImage
     
     init(image: UIImage) {
         self.image = image

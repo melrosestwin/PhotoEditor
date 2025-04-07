@@ -67,6 +67,7 @@
 		ED92A7D42D6BC77600E661B2 /* BorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92A7D32D6BC77600E661B2 /* BorderedButton.swift */; };
 		ED954A682D7CA6C000675A3A /* CanvasTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED954A672D7CA6C000675A3A /* CanvasTool.swift */; };
 		ED954A6B2D7CE7A500675A3A /* CropToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED954A6A2D7CE7A500675A3A /* CropToolView.swift */; };
+		EDA2C18C2DA476B600664477 /* HistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA2C18B2DA476B600664477 /* HistoryItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -131,6 +132,7 @@
 		ED92A7D32D6BC77600E661B2 /* BorderedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedButton.swift; sourceTree = "<group>"; };
 		ED954A672D7CA6C000675A3A /* CanvasTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasTool.swift; sourceTree = "<group>"; };
 		ED954A6A2D7CE7A500675A3A /* CropToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropToolView.swift; sourceTree = "<group>"; };
+		EDA2C18B2DA476B600664477 /* HistoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,6 +290,7 @@
 		ED5ABF3A2D748BCF0086AD82 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				EDA2C18B2DA476B600664477 /* HistoryItem.swift */,
 				ED954A672D7CA6C000675A3A /* CanvasTool.swift */,
 				ED5ABF3D2D748BEE0086AD82 /* BrushPath.swift */,
 				ED5ABF412D74E69C0086AD82 /* EditorTab.swift */,
@@ -488,6 +491,7 @@
 				ED8AAA642D9B502C0078AC1E /* Data+Extension.swift in Sources */,
 				ED426AF72D5D329200D92CB3 /* OnboardingItem.swift in Sources */,
 				ED92A7CB2D6B845900E661B2 /* ProjectCardView.swift in Sources */,
+				EDA2C18C2DA476B600664477 /* HistoryItem.swift in Sources */,
 				ED8AAA612D9B4D5A0078AC1E /* DataController.swift in Sources */,
 				ED8AAA622D9B4D5A0078AC1E /* DataRepository.xcdatamodeld in Sources */,
 				ED426AF32D5D323200D92CB3 /* ScreenSize.swift in Sources */,

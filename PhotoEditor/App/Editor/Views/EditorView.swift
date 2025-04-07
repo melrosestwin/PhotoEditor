@@ -5,12 +5,53 @@
 
 import SwiftUI
 
+enum EditorAlert: Int, CaseIterable {
+    case dismiss
+    case delete
+    
+    var title: String {
+        switch self {
+        case .dismiss:
+            return "Discard changes?"
+        case .delete:
+            return "Delete project?"
+        }
+    }
+    
+    var message: String {
+        switch self {
+        case .dismiss:
+            return "Any unsaved changes will be lost."
+        case .delete:
+            return "This action cannot be undone."
+        }
+    }
+}
+
 struct EditorView: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     @StateObject var vm: EditorViewModel
+    
+    @State private var showDismissAlert: Bool = false
+    @State private var showDeleteAlert: Bool = false
+    
+    private var canSave: Bool {
+        if vm.projectId == nil {
+            return true
+        } else {
+            return vm.projectHistory != vm.imageHistory
+        }
+    }
+    
+    private var canDelete: Bool {
+        if let id = vm.projectId, viewContext.registeredObject(for: id) != nil {
+            return true
+        }
+        return false
+    }
     
     init(project: Project) {
         self._vm = StateObject(wrappedValue: EditorViewModel(project: project))
@@ -83,8 +124,36 @@ struct EditorView: View {
         }
         .scrollDisabled(!vm.isFocused)
         .ignoresSafeArea(edges: .top)
-        .navigationContent(title: "") {
-            navigationTrailingButtons
+        .navigationBarBackButtonHidden()
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    if canSave {
+                        showDismissAlert = true
+                    } else {
+                        dismiss()
+                    }
+                } label: {
+                    HStack(spacing: 5.adaptive()) {
+                        Image(systemName: "chevron.left")
+                        Text("Return")
+                            .font(.poppins(17.adaptive()))
+                    }
+                    .foregroundStyle(.white)
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                navigationTrailingButtons
+            }
+        }
+        .alert("Discard changes?", isPresented: $showDismissAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Leave", role: .destructive) {
+                dismiss()
+            }
+        } message: {
+            Text("Are you sure that you want to leave? Any unsaved changes will be lost.")
         }
     }
     
@@ -275,15 +344,24 @@ struct EditorView: View {
     var navigationTrailingButtons: some View {
         HStack(spacing: 8.adaptive()) {
             Button {
-                deleteProject()
+                showDeleteAlert = true
             } label: {
                 Image(.delete)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 34.adaptive(), height: 34.adaptive())
             }
-            .disabled(vm.imageHistory.isEmpty)
-            .opacity(vm.imageHistory.isEmpty ? 0.5 : 1)
+            .disabled(!canDelete)
+            .opacity(!canDelete ? 0.5 : 1)
+            .alert("Delete project?", isPresented: $showDismissAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Delete", role: .destructive) {
+                    deleteProject()
+                }
+            } message: {
+                Text("Are you sure that you want to delete the project? This action cannot be undone.")
+            }
+
             
             Button {
                 saveProject()
@@ -293,8 +371,8 @@ struct EditorView: View {
                     .scaledToFit()
                     .frame(width: 34.adaptive(), height: 34.adaptive())
             }
-            .disabled(vm.imageHistory.isEmpty)
-            .opacity(vm.imageHistory.isEmpty ? 0.5 : 1)
+            .disabled(!canSave)
+            .opacity(!canSave ? 0.5 : 1)
         }
         .padding(.trailing, 8.adaptive())
     }
@@ -322,13 +400,16 @@ struct EditorView: View {
         } else {
             project = Project(context: viewContext)
             project.dateCreate = Date()
+            vm.projectId = project.objectID
         }
         project.originalImage = vm.originalImage
         project.sportKind = vm.sportKind
         project.history = vm.imageHistory
         project.dateChange = Date()
+        vm.cancelledHistory = []
         
         saveChanges()
+        dismiss()
     }
     
     func saveChanges() {

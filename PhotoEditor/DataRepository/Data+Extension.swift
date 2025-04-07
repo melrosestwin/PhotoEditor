@@ -29,15 +29,6 @@ public extension Project {
         }
     }
     
-    var history: [UIImage] {
-        get {
-            return self.historyData?.compactMap { UIImage(data: $0) } ?? []
-        }
-        set {
-            self.historyData = newValue.compactMap { $0.pngData() }
-        }
-    }
-    
     var sportKind: SportKind {
         get {
             return SportKind(rawValue: sportKindId) ?? .soccer

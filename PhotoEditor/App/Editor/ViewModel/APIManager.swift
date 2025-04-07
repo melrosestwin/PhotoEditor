@@ -9,8 +9,12 @@ import UIKit
 
 class APIManager {
     
-    private let apiKey: String = "sk-38kRMfTvIQD3ZMwsfgBEpiXX9fC0628ihQVbPlTLWzMvDeaY"
+    private let apiKey: String
     private let baseURL: String = "https://api.stability.ai/v2beta"
+    
+    init() {
+        apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? ""
+    }
     
     func fetchResults(generationId: String) async throws -> Data {
         guard let url = URL(string: baseURL + "/results/{id}") else { throw URLError(.badURL) }

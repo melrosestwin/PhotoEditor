@@ -58,8 +58,10 @@ struct CardLibraryView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16.adaptive()) {
                     ForEach(projects, id: \.self) { project in
-                        let image = project.history.last ?? project.originalImage ?? UIImage(resource: .tipBanner4)
-                        ProjectCardView(image: image)
+                        let image = project.history?.last?.image ?? project.originalImage ?? UIImage()
+                        NavigationLink(destination: EditorView(project: project)) {
+                            ProjectCardView(image: image)
+                        }
                     }
                     
                     createButton
@@ -96,22 +98,7 @@ struct CardLibraryView: View {
     var createButton: some View {
         NavigationLink {
             UploadPhotoView { image in
-                let project = Project(context: viewContext)
-                project.dateCreate = Date()
-                project.dateChange = Date()
-                project.originalImage = image
-                project.history = []
-                project.sportKind = sport
-                
-                if viewContext.hasChanges {
-                    withAnimation {
-                        do {
-                            try viewContext.save()
-                        } catch {
-                            print(error)
-                        }
-                    }
-                }
+                saveProject(image)
             }
         } label: {
             Color.clear
@@ -132,6 +119,25 @@ struct CardLibraryView: View {
                         .inset(by: 1.adaptive())
                         .stroke(LinearGradient.yellow, lineWidth: 2.adaptive())
                 }
+        }
+    }
+    
+    func saveProject(_ image: UIImage) {
+        let project = Project(context: viewContext)
+        project.dateCreate = Date()
+        project.dateChange = Date()
+        project.originalImage = image
+        project.history = []
+        project.sportKind = sport
+        
+        if viewContext.hasChanges {
+            withAnimation {
+                do {
+                    try viewContext.save()
+                } catch {
+                    print(error)
+                }
+            }
         }
     }
 }

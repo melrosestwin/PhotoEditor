@@ -17,7 +17,8 @@ final class EditorViewModel: ObservableObject {
     
     let apiManager: APIManager = APIManager()
     
-    var projectId: NSManagedObjectID? = nil
+    @Published var projectId: NSManagedObjectID? = nil
+    var projectHistory: [HistoryItem]
     let sportKind: SportKind
     let originalImage: UIImage
     
@@ -37,12 +38,12 @@ final class EditorViewModel: ObservableObject {
     @Published var sliderValue: Double = 0.5
     @Published var selectedTool: CanvasTool = .brush
     
-    @Published var imageHistory: [UIImage] = []
-    @Published var cancelledHistory: [UIImage] = []
+    @Published var imageHistory: [HistoryItem] = []
+    @Published var cancelledHistory: [HistoryItem] = []
     @Published var editingImage: UIImage?
     
     var lastImage: UIImage {
-        return imageHistory.last ?? originalImage
+        return imageHistory.last?.image ?? originalImage
     }
     
     var brushWidth: CGFloat {
@@ -51,6 +52,7 @@ final class EditorViewModel: ObservableObject {
     
     init(image: UIImage, sportKind: SportKind) {
         self.originalImage = image
+        self.projectHistory = []
         self.sportKind = sportKind
     }
     
@@ -58,7 +60,8 @@ final class EditorViewModel: ObservableObject {
         self.originalImage = project.originalImage ?? UIImage(resource: .tipBanner4)
         self.sportKind = project.sportKind
         self.projectId = project.objectID
-        self.imageHistory = project.history
+        self.imageHistory = project.history ?? []
+        self.projectHistory = project.history ?? []
     }
     
     var currentPath: Path {
@@ -74,7 +77,7 @@ final class EditorViewModel: ObservableObject {
     
     func saveLastChanges() {
         if let image = editingImage {
-            imageHistory.append(image)
+            imageHistory.append(HistoryItem(image: image))
             editingImage = nil
         }
     }
