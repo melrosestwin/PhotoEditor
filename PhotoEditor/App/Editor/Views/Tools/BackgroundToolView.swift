@@ -22,7 +22,7 @@ enum BackgroundTab: CaseIterable {
 
 enum BackgroundType: Equatable {
     
-    case color(Color)
+    case color(ImageResource)
     case image(UIImage)
     case prompt(String)
     case clear
@@ -40,9 +40,9 @@ struct BackgroundToolView<GenerativeContent: View>: View {
     }
     
     private let templateImages: [UIImage] = SportKind.soccer.backgrounds.map({ UIImage(resource: $0) })
-    private let templateColors: [[Color]] = [
-        [.white, .red, .darkBlue, .yellow],
-        [.lightBlue, .green, .pink, .orange]
+    private let templateColors: [[ImageResource]] = [
+        [.whiteBackground, .redBackground, .blueBackground, .yellowBackground],
+        [.cyanBackground, .greenBackground, .pinkBackground, .orangeBackground]
     ]
     
     @State private var selectedBackground: BackgroundType?
@@ -133,19 +133,21 @@ struct BackgroundToolView<GenerativeContent: View>: View {
             VStack(spacing: 16.adaptive()) {
                 ForEach(templateColors, id: \.self) { line in
                     HStack(spacing: 20.adaptive()) {
-                        ForEach(line, id: \.self) { color in
-                            Circle()
-                                .fill(color)
+                        ForEach(line, id: \.self) { resource in
+                            Image(resource)
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(Circle())
                                 .overlay {
-                                    if selectedBackground == .color(color) {
+                                    if selectedBackground == .color(resource) {
                                         Circle()
                                             .inset(by: 3.5)
                                             .stroke(.black.opacity(0.5), lineWidth: 7)
                                     }
                                 }
                                 .onTapGesture {
-                                    vm.changeBackground(.color(color))
-                                    selectedBackground = .color(color)
+                                    vm.changeBackground(.color(resource))
+                                    selectedBackground = .color(resource)
                                 }
                         }
                     }

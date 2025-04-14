@@ -17,7 +17,7 @@ class APIManager {
     }
     
     func fetchResults(generationId: String) async throws -> Data {
-        guard let url = URL(string: baseURL + "/results/{id}") else { throw URLError(.badURL) }
+        guard let url = URL(string: baseURL + "/results/" + generationId) else { throw URLError(.badURL) }
         
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(apiKey)",
@@ -25,12 +25,23 @@ class APIManager {
         ]
         
         return try await withCheckedThrowingContinuation { continuation in
-            AF.request(url, method: .get, parameters: ["id": generationId], headers: headers)
-                .validate(contentType: ["application/json"])
+            AF.request(url, method: .get, headers: headers)
+                .validate(contentType: ["image/png", "image/jpeg", "image/*", "application/json"])
                 .responseData { response in
                     switch response.result {
                     case .success(let value):
-                        continuation.resume(returning: value)
+                        do {
+                            let progress = try JSONDecoder().decode(APIResponse.self, from: value)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+                                guard let self else { return }
+                                Task {
+                                    let data = try await self.fetchResults(generationId: progress.id)
+                                    continuation.resume(returning: data)
+                                }
+                            }
+                        } catch {
+                            continuation.resume(returning: value)
+                        }
                     case .failure(let error):
                         continuation.resume(throwing: error)
                     }
@@ -75,7 +86,7 @@ class APIManager {
                 to: url,
                 method: .post,
                 headers: headers)
-            .validate()
+            .validate(contentType: ["application/json"])
             .responseDecodable(of: APIResponse.self) { response in
                 switch response.result {
                 case .success(let value):
@@ -161,4 +172,5 @@ enum APIError: Error {
 
 struct APIResponse: Decodable {
     let id: String
+    let status: String?
 }

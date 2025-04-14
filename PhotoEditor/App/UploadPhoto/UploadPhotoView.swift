@@ -103,7 +103,7 @@ struct UploadPhotoView: View {
             )
             .ignoresSafeArea(edges: .bottom)
         }
-        .setDefaultBackground()
+        .setDefaultBackground(.primary)
         .navigationContent(title: "Uploading photo")
     }
 }

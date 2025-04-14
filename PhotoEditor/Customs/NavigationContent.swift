@@ -24,6 +24,9 @@ struct NavigationContent<TrailingContent: View>: ViewModifier {
                     } label: {
                         HStack(spacing: 5.adaptive()) {
                             Image(systemName: "chevron.left")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 18.adaptive(), height: 24.adaptive())
                             Text(backButtonTitle)
                                 .font(.poppins(17.adaptive()))
                         }

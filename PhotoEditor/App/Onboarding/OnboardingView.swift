@@ -8,7 +8,7 @@ import SwiftUI
 struct OnboardingView: View {
     
     @Binding var isFirstLaunch: Bool
-    
+    @State private var showPurchaseView: Bool = false
     @State private var selectedItem: OnboardingItem = .create
     
     var body: some View {
@@ -72,9 +72,7 @@ struct OnboardingView: View {
                 
                 if selectedItem == .choice {
                     YellowButton(title: "START") {
-                        withAnimation {
-                            isFirstLaunch = false
-                        }
+                        showPurchaseView = true
                     }
                     .padding([.bottom, .horizontal], 42.adaptive())
                 } else {
@@ -90,6 +88,13 @@ struct OnboardingView: View {
                 .ignoresSafeArea()
         }
         .ignoresSafeArea()
+        .fullScreenCover(isPresented: $showPurchaseView, onDismiss: {
+            withAnimation {
+                isFirstLaunch = false
+            }
+        }, content: {
+            PurchasesView(button: .skip)
+        })
     }
     
     var nextButton: some View {
@@ -101,10 +106,7 @@ struct OnboardingView: View {
                     switch selectedItem {
                     case .create: selectedItem = .edit
                     case .edit: selectedItem = .choice
-                    default:
-                        withAnimation {
-                            isFirstLaunch = false
-                        }
+                    case .choice: showPurchaseView = true
                     }
                 }
             } label: {
@@ -115,8 +117,4 @@ struct OnboardingView: View {
             }
         }
     }
-}
-
-#Preview {
-    OnboardingView(isFirstLaunch: .constant(false))
 }

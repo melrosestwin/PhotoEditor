@@ -5,12 +5,26 @@
 
 import SwiftUI
 
-struct DefaultBackground: ViewModifier {
+public enum DefaultBackground: Int {
+    case primary
+    case secondary
+    
+    var image: ImageResource {
+        switch self {
+        case .primary: .primaryBackground
+        case .secondary: .secondaryBackground
+        }
+    }
+}
+
+struct DefaultBackgroundViewModifier: ViewModifier {
+    
+    let background: DefaultBackground
     
     func body(content: Content) -> some View {
         content
             .background(alignment: .center) {
-                Image(.mainBackground)
+                Image(background.image)
                     .resizable()
                     .scaledToFill()
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -20,7 +34,7 @@ struct DefaultBackground: ViewModifier {
 }
 
 extension View {
-    public func setDefaultBackground() -> some View {
-        modifier(DefaultBackground())
+    public func setDefaultBackground(_ background: DefaultBackground) -> some View {
+        modifier(DefaultBackgroundViewModifier(background: background))
     }
 }

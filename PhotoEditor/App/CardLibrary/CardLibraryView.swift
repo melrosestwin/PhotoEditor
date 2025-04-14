@@ -33,7 +33,7 @@ struct CardLibraryView: View {
             Spacer()
         }
         .padding(.vertical, 6.adaptive())
-        .setDefaultBackground()
+        .setDefaultBackground(.primary)
         .overlay {
             if showTutorial {
                 EditorTutorialView(tips: TutorialTip.libraryTips) {

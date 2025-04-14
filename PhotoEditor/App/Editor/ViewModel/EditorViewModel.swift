@@ -15,7 +15,8 @@ enum EditingStep: Int, CaseIterable {
 @MainActor
 final class EditorViewModel: ObservableObject {
     
-    let apiManager: APIManager = APIManager()
+    private let apiManager: APIManager = APIManager()
+    private let storeManager: StoreManager = StoreManager.shared
     
     @Published var projectId: NSManagedObjectID? = nil
     var projectHistory: [HistoryItem]
@@ -27,6 +28,7 @@ final class EditorViewModel: ObservableObject {
     @Published var backgroundTab: BackgroundTab = .color
     @Published var showBrushTip: Bool = false
     @Published var showTutorial: Bool = false
+    @Published var showPurchasesScreen: Bool = false
     @Published var isLoading: Bool = false
     @Published var isFocused: Bool = false
     
@@ -87,49 +89,56 @@ final class EditorViewModel: ObservableObject {
     }
     
     func changeBackground(_ background: BackgroundType) {
-        Task {
-            do {
-                isLoading = true
-                var resultData: Data
-                switch background {
-                case .color(let color):
-                    let id = try await apiManager.replaceBackground(for: lastImage, with: "Background of \(color.toHex() ?? "") color")
-                    resultData = try await apiManager.fetchResults(generationId: id)
-                case .image(let uIImage):
-                    let id = try await apiManager.replaceBackground(for: lastImage, with: uIImage)
-                    resultData = try await apiManager.fetchResults(generationId: id)
-                case .prompt(let prompt):
-                    let id = try await apiManager.replaceBackground(for: lastImage, with: prompt)
-                    resultData = try await apiManager.fetchResults(generationId: id)
-                case .clear:
-                    resultData = try await apiManager.removeBackground(for: lastImage)
+        if storeManager.generationsRemaining > 0 {
+            Task {
+                do {
+                    isLoading = true
+                    var resultData: Data
+                    switch background {
+                    case .color(let resource):
+                        let id = try await apiManager.replaceBackground(for: lastImage, with: UIImage(resource: resource))
+                        resultData = try await apiManager.fetchResults(generationId: id)
+                    case .image(let uIImage):
+                        let id = try await apiManager.replaceBackground(for: lastImage, with: uIImage)
+                        resultData = try await apiManager.fetchResults(generationId: id)
+                    case .prompt(let prompt):
+                        let id = try await apiManager.replaceBackground(for: lastImage, with: prompt)
+                        resultData = try await apiManager.fetchResults(generationId: id)
+                    case .clear:
+                        resultData = try await apiManager.removeBackground(for: lastImage)
+                    }
+                    editingImage = UIImage(data: resultData)
+                    isLoading = false
+                } catch {
+                    print(error)
+                    isLoading = false
                 }
-                editingImage = UIImage(data: resultData)
-                isLoading = false
-            } catch {
-                print(error)
-                isLoading = false
+                
             }
-            
+        } else {
+            showPurchasesScreen = true
         }
     }
     
     func inpaint(prompt: String) {
-        let image = editingImage ?? lastImage
-        let text = selectedTab.initialPrompt + prompt
-        let mask = ImageRenderer(content: RenderingCanvasView(paths: canvasPaths)
-            .frame(width: image.size.width, height: image.size.height)).uiImage
-        Task {
-            do {
-                isLoading = true
-                let resultData = try await apiManager.inpaint(for: image, with: text, using: mask)
-                editingImage = UIImage(data: resultData)
-                isLoading = false
-            } catch {
-                print(error)
-                isLoading = false
+        if storeManager.generationsRemaining > 0 {
+            let image = editingImage ?? lastImage
+            let text = selectedTab.initialPrompt + prompt
+            let mask = ImageRenderer(content: RenderingCanvasView(paths: canvasPaths)
+                .frame(width: image.size.width, height: image.size.height)).uiImage
+            Task {
+                do {
+                    isLoading = true
+                    let resultData = try await apiManager.inpaint(for: image, with: text, using: mask)
+                    editingImage = UIImage(data: resultData)
+                    isLoading = false
+                } catch {
+                    print(error)
+                    isLoading = false
+                }
             }
-            
+        } else {
+            showPurchasesScreen = true
         }
     }
     

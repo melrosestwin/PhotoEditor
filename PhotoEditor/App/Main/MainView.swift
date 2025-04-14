@@ -13,15 +13,35 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12.adaptive()) {
-                Text(selectedSport.title)
-                    .font(.mazzard(24))
-                    .foregroundStyle(.white)
-                    .padding(.top, 6.adaptive())
-                    .frame(width: 164.adaptive(), height: 48.adaptive(), alignment: .center)
-                    .background(.titleBackground)
-                    .border(.lightYellow, width: 1)
-                    .padding(.top, 12.adaptive())
-                    .animation(.default, value: selectedSport)
+                HStack(spacing: 0) {
+                    Rectangle()
+                        .fill(.clear)
+                        .aspectRatio(1, contentMode: .fit)
+                    
+                    Spacer(minLength: 0)
+                    
+                    Text(selectedSport.title)
+                        .font(.mazzard(24))
+                        .foregroundStyle(.white)
+                        .padding(.top, 6.adaptive())
+                        .frame(width: 164.adaptive(), height: 48.adaptive(), alignment: .center)
+                        .background(.titleBackground)
+                        .border(.lightYellow, width: 1)
+                        .animation(.default, value: selectedSport)
+                    
+                    Spacer(minLength: 0)
+                    
+                    NavigationLink(destination: SettingsView()) {
+                        Image(.profileIcon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 48.adaptive(), height: 48.adaptive())
+                            .shadow(color: Color(hex: 0xD57700), radius: 13.adaptive())
+                    }
+                }
+                .frame(height: 48.adaptive())
+                .padding(.top, 12.adaptive())
+                .padding(.horizontal, 16.adaptive())
                 
                 TabView(selection: $selectedSport) {
                     ForEach(SportKind.allCases, id: \.self) { item in
@@ -60,7 +80,7 @@ struct MainView: View {
                 .padding(.horizontal, 42.adaptive())
                 .padding(.bottom, 10.adaptive())
             }
-            .setDefaultBackground()
+            .setDefaultBackground(.primary)
             .overlay {
                 if showTutorial {
                     EditorTutorialView(tips: TutorialTip.editorTips) {

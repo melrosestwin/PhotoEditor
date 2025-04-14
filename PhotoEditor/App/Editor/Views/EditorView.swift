@@ -98,19 +98,13 @@ struct EditorView: View {
                         loadingView
                     }
                 }
-                .border(.red)
                 
                 currentToolView
                 
                 toolBar
             }
             .frame(minWidth: 0, maxWidth: .infinity)
-            .background {
-                Image(.secondaryBackground)
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
-            }
+            .setDefaultBackground(.secondary)
             .frame(height: UIScreen.main.bounds.height - safeAreaInsets.bottom)
             .overlay {
                 if vm.showTutorial {
@@ -120,6 +114,17 @@ struct EditorView: View {
                         }
                     }
                 }
+            }
+            .fullScreenCover(isPresented: $vm.showPurchasesScreen) {
+                PurchasesView(button: .close)
+            }
+            .alert("Discard changes?", isPresented: $showDismissAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Leave", role: .destructive) {
+                    dismiss()
+                }
+            } message: {
+                Text("Are you sure that you want to leave? Any unsaved changes will be lost.")
             }
         }
         .scrollDisabled(!vm.isFocused)
@@ -146,14 +151,6 @@ struct EditorView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 navigationTrailingButtons
             }
-        }
-        .alert("Discard changes?", isPresented: $showDismissAlert) {
-            Button("Cancel", role: .cancel) { }
-            Button("Leave", role: .destructive) {
-                dismiss()
-            }
-        } message: {
-            Text("Are you sure that you want to leave? Any unsaved changes will be lost.")
         }
     }
     
@@ -353,7 +350,7 @@ struct EditorView: View {
             }
             .disabled(!canDelete)
             .opacity(!canDelete ? 0.5 : 1)
-            .alert("Delete project?", isPresented: $showDismissAlert) {
+            .alert("Delete project?", isPresented: $showDeleteAlert) {
                 Button("Cancel", role: .cancel) { }
                 Button("Delete", role: .destructive) {
                     deleteProject()
