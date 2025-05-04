@@ -123,8 +123,7 @@ final class EditorViewModel: ObservableObject {
     }
     
     func inpaint(prompt: String) {
-        if true {
-//        if storeManager.generationsRemaining > 0 {
+        if storeManager.generationsRemaining > 0 {
             storeManager.generationsRemaining -= 1
             let image = editingImage ?? lastImage
             let text = selectedTab.initialPrompt + prompt
