@@ -8,7 +8,7 @@ import SwiftUI
 struct MainView: View {
     
     @State private var selectedSport: SportKind = .soccer
-    @State private var showTutorial: Bool = false
+    @AppStorage("showMainTutorial") private var showTutorial: Bool = true
     
     var body: some View {
         NavigationStack {
@@ -82,13 +82,16 @@ struct MainView: View {
             }
             .setDefaultBackground(.primary)
             .overlay {
-                if showTutorial {
-                    EditorTutorialView(tips: TutorialTip.editorTips) {
-                        withAnimation {
-                            showTutorial = false
+                Group {
+                    if showTutorial {
+                        EditorTutorialView(tips: [.mainPage]) {
+                            withAnimation {
+                                showTutorial = false
+                            }
                         }
                     }
                 }
+                .animation(.default, value: showTutorial)
             }
         }
         .navigationViewStyle(.stack)

@@ -27,7 +27,7 @@ final class EditorViewModel: ObservableObject {
     @Published var selectedTab: EditorTab = .background
     @Published var backgroundTab: BackgroundTab = .color
     @Published var showBrushTip: Bool = false
-    @Published var showTutorial: Bool = false
+    @AppStorage("showEditorTutorial") var showTutorial: Bool = true
     @Published var showPurchasesScreen: Bool = false
     @Published var isLoading: Bool = false
     @Published var isFocused: Bool = false
@@ -43,6 +43,7 @@ final class EditorViewModel: ObservableObject {
     @Published var imageHistory: [HistoryItem] = []
     @Published var cancelledHistory: [HistoryItem] = []
     @Published var editingImage: UIImage?
+    @Published var editingImageSize: CGSize = .zero
     
     var lastImage: UIImage {
         return imageHistory.last?.image ?? originalImage
@@ -90,6 +91,7 @@ final class EditorViewModel: ObservableObject {
     
     func changeBackground(_ background: BackgroundType) {
         if storeManager.generationsRemaining > 0 {
+            storeManager.generationsRemaining -= 1
             Task {
                 do {
                     isLoading = true
@@ -121,11 +123,14 @@ final class EditorViewModel: ObservableObject {
     }
     
     func inpaint(prompt: String) {
-        if storeManager.generationsRemaining > 0 {
+        if true {
+//        if storeManager.generationsRemaining > 0 {
+            storeManager.generationsRemaining -= 1
             let image = editingImage ?? lastImage
             let text = selectedTab.initialPrompt + prompt
             let mask = ImageRenderer(content: RenderingCanvasView(paths: canvasPaths)
-                .frame(width: image.size.width, height: image.size.height)).uiImage
+                .frame(width: editingImageSize.width, height: editingImageSize.height))
+                .uiImage
             Task {
                 do {
                     isLoading = true
@@ -193,3 +198,12 @@ final class EditorViewModel: ObservableObject {
     }
 }
 
+struct ViewSizeKey: PreferenceKey {
+    typealias Value = CGSize
+    
+    static var defaultValue: CGSize = .zero
+    
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
+    }
+}

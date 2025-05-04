@@ -69,6 +69,13 @@ struct EditorView: View {
                     Image(uiImage: vm.editingImage ?? vm.lastImage)
                         .resizable()
                         .scaledToFit()
+                        .background(GeometryReader { geometry in
+                            Color.clear
+                                .preference(key: ViewSizeKey.self, value: geometry.size)
+                        })
+                        .onPreferenceChange(ViewSizeKey.self) { newSize in
+                            vm.editingImageSize = newSize
+                        }
                         .overlay {
                             if vm.selectedTab == .insert || vm.selectedTab == .outfit {
                                 Canvas { context, size in
@@ -85,6 +92,7 @@ struct EditorView: View {
                                 )
                             }
                         }
+                                    
                     Spacer(minLength: 0)
                 }
                 .frame(maxWidth: .infinity)
@@ -107,13 +115,16 @@ struct EditorView: View {
             .setDefaultBackground(.secondary)
             .frame(height: UIScreen.main.bounds.height - safeAreaInsets.bottom)
             .overlay {
-                if vm.showTutorial {
-                    EditorTutorialView(tips: TutorialTip.editorTips, showFinalButton: true) {
-                        withAnimation {
-                            vm.showTutorial = false
+                Group {
+                    if vm.showTutorial {
+                        EditorTutorialView(tips: TutorialTip.editorTips, showFinalButton: true) {
+                            withAnimation {
+                                vm.showTutorial = false
+                            }
                         }
                     }
                 }
+                .animation(.default, value: vm.showTutorial)
             }
             .fullScreenCover(isPresented: $vm.showPurchasesScreen) {
                 PurchasesView(button: .close)

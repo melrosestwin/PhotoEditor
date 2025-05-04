@@ -8,7 +8,7 @@ import CoreData
 
 struct CardLibraryView: View {
     
-    @State private var showTutorial: Bool = false
+    @AppStorage("showLibraryTutorial") private var showTutorial: Bool = true
     
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Project>
@@ -35,13 +35,16 @@ struct CardLibraryView: View {
         .padding(.vertical, 6.adaptive())
         .setDefaultBackground(.primary)
         .overlay {
-            if showTutorial {
-                EditorTutorialView(tips: TutorialTip.libraryTips) {
-                    withAnimation {
-                        showTutorial = false
+            Group {
+                if showTutorial {
+                    EditorTutorialView(tips: TutorialTip.libraryTips) {
+                        withAnimation {
+                            showTutorial = false
+                        }
                     }
                 }
             }
+            .animation(.default, value: showTutorial)
         }
         .navigationContent(title: "Card library")
         

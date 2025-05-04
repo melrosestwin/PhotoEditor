@@ -39,7 +39,7 @@ struct BackgroundToolView<GenerativeContent: View>: View {
         return importedImages.compactMap(\.uiImage)
     }
     
-    private let templateImages: [UIImage] = SportKind.soccer.backgrounds.map({ UIImage(resource: $0) })
+    private let templateImages: [UIImage]
     private let templateColors: [[ImageResource]] = [
         [.whiteBackground, .redBackground, .blueBackground, .yellowBackground],
         [.cyanBackground, .greenBackground, .pinkBackground, .orangeBackground]
@@ -56,6 +56,7 @@ struct BackgroundToolView<GenerativeContent: View>: View {
     ) {
         self.vm = vm
         self.content = content()
+        self.templateImages = vm.sportKind.backgrounds.map({ UIImage(resource: $0) })
     }
     
     var body: some View {

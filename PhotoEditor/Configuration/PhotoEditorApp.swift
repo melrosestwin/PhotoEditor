@@ -12,11 +12,14 @@ struct PhotoEditorApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if isFirstLaunch {
-                OnboardingView(isFirstLaunch: $isFirstLaunch)
-            } else {
-                MainView()
+            Group {
+                if isFirstLaunch {
+                    OnboardingView(isFirstLaunch: $isFirstLaunch)
+                } else {
+                    MainView()
+                }
             }
+            .animation(.default, value: isFirstLaunch)
         }
     }
 }

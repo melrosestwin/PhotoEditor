@@ -24,24 +24,15 @@ class APIManager {
             "Content-Type": "application/json"
         ]
         
+        let interceptor = RetryHandler(retryLimit: 3, retryDelay: 1.0)
+        
         return try await withCheckedThrowingContinuation { continuation in
-            AF.request(url, method: .get, headers: headers)
+            AF.request(url, method: .get, headers: headers, interceptor: interceptor)
                 .validate(contentType: ["image/png", "image/jpeg", "image/*", "application/json"])
                 .responseData { response in
                     switch response.result {
                     case .success(let value):
-                        do {
-                            let progress = try JSONDecoder().decode(APIResponse.self, from: value)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
-                                guard let self else { return }
-                                Task {
-                                    let data = try await self.fetchResults(generationId: progress.id)
-                                    continuation.resume(returning: data)
-                                }
-                            }
-                        } catch {
-                            continuation.resume(returning: value)
-                        }
+                        continuation.resume(returning: value)
                     case .failure(let error):
                         continuation.resume(throwing: error)
                     }
@@ -80,22 +71,16 @@ class APIManager {
             "Accept": "image/*",
         ]
         
-        return try await withCheckedThrowingContinuation { continuation in
-            AF.upload(
-                multipartFormData: multipartFormData,
-                to: url,
-                method: .post,
-                headers: headers)
-            .validate(contentType: ["application/json"])
-            .responseDecodable(of: APIResponse.self) { response in
-                switch response.result {
-                case .success(let value):
-                    continuation.resume(returning: value.id)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
+        return try await AF.upload(
+            multipartFormData: multipartFormData,
+            to: url,
+            method: .post,
+            headers: headers)
+        .validate(contentType: ["application/json"])
+        .serializingDecodable(APIResponse.self)
+        .result
+        .get()
+        .id
     }
     
     func removeBackground(for image: UIImage) async throws -> Data {
@@ -148,6 +133,7 @@ class APIManager {
                     if let maskData {
                         multipartFormData.append(maskData, withName: "mask", fileName: "mask.png", mimeType: "image/png")
                     }
+                    multipartFormData.append("png".data(using: .utf8)!, withName: "output_format")
                 },
                 to: url,
                 method: .post,
@@ -173,4 +159,24 @@ enum APIError: Error {
 struct APIResponse: Decodable {
     let id: String
     let status: String?
+}
+
+final class RetryHandler: RequestInterceptor {
+    let retryLimit: Int
+    let retryDelay: TimeInterval
+
+    init(retryLimit: Int = 3, retryDelay: TimeInterval = 2.0) {
+        self.retryLimit = retryLimit
+        self.retryDelay = retryDelay
+    }
+
+    func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+        let retryCount = request.retryCount
+        if retryCount < retryLimit {
+            print("Retrying request (\(retryCount + 1)) after \(retryDelay) seconds...")
+            completion(.retryWithDelay(retryDelay))
+        } else {
+            completion(.doNotRetry)
+        }
+    }
 }

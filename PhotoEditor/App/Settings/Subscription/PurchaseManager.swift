@@ -11,7 +11,7 @@ class StoreManager: NSObject, ObservableObject {
     static public let shared: StoreManager = .init()
     
     @Published var products: [SKProduct] = []
-    @AppStorage("generationsRemaining") public var generationsRemaining: Int = 0
+    @AppStorage("generationsRemaining") public var generationsRemaining: Int = 10
     
     override init() {
         super.init()

@@ -11,9 +11,9 @@ struct RenderingCanvasView: View {
     
     var body: some View {
         Canvas { context, size in
-            context.blendMode = .destinationAtop
+            context.fill(Path(CGRect(origin: .zero, size: size)), with: .color(.black))
             paths.forEach { path in
-                context.stroke(path.path, with: .color(.black), style: .init(lineWidth: path.lineWidth, lineCap: .round, lineJoin: .round))
+                context.stroke(path.path, with: .color(.white), style: .init(lineWidth: path.lineWidth, lineCap: .round, lineJoin: .round))
             }
         }
     }
