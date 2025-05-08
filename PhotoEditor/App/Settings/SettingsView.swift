@@ -10,16 +10,12 @@ struct SettingsView: View {
     var body: some View {
         VStack(spacing: 16.adaptive()) {
             
-            if let url = LinksManager.privacyUrl {
-                Link(destination: url) {
-                    settingRow("Privacy Policy")
-                }
+            NavigationLink(destination: PrivacyView()) {
+                settingRow("Privacy Policy")
             }
             
-            if let url = LinksManager.termsUrl {
-                Link(destination: url) {
-                    settingRow("Terms of Use")
-                }
+            NavigationLink(destination: TermsOfUseView()) {
+                settingRow("Terms of Use")
             }
             
             NavigationLink(destination: PurchasesView(button: .back)) {

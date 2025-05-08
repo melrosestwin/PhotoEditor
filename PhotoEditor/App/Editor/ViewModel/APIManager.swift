@@ -24,20 +24,36 @@ class APIManager {
             "Content-Type": "application/json"
         ]
         
-        let interceptor = RetryHandler(retryLimit: 3, retryDelay: 1.0)
+        let maxAttempts = 5
+        var attempt = 0
         
-        return try await withCheckedThrowingContinuation { continuation in
-            AF.request(url, method: .get, headers: headers, interceptor: interceptor)
-                .validate(contentType: ["image/png", "image/jpeg", "image/*", "application/json"])
-                .responseData { response in
+        while attempt < maxAttempts {
+            attempt += 1
+            
+            let response = await AF.request(url, method: .get, headers: headers)
+                .serializingData()
+                .response
+            
+            if let statusCode = response.response?.statusCode {
+                switch statusCode {
+                case 200:
                     switch response.result {
-                    case .success(let value):
-                        continuation.resume(returning: value)
+                    case .success(let data):
+                        return data
                     case .failure(let error):
-                        continuation.resume(throwing: error)
+                        throw error
                     }
+                case 202:
+                    try await Task.sleep(nanoseconds: 10_000_000_000)
+                default:
+                    throw URLError(.badServerResponse)
                 }
+            } else {
+                throw URLError(.unknown)
+            }
         }
+        
+        throw URLError(.timedOut)
     }
     
     func replaceBackground(for image: UIImage, with prompt: String) async throws -> String {
@@ -164,19 +180,23 @@ struct APIResponse: Decodable {
 final class RetryHandler: RequestInterceptor {
     let retryLimit: Int
     let retryDelay: TimeInterval
-
+    
     init(retryLimit: Int = 3, retryDelay: TimeInterval = 2.0) {
         self.retryLimit = retryLimit
         self.retryDelay = retryDelay
     }
-
+    
     func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
         let retryCount = request.retryCount
-        if retryCount < retryLimit {
-            print("Retrying request (\(retryCount + 1)) after \(retryDelay) seconds...")
+        let statusCode = request.response?.statusCode
+        
+        if statusCode == 202 && retryCount < retryLimit {
+            print("Retrying request (\(retryCount + 1)) after \(retryDelay) seconds due to 202 status...")
             completion(.retryWithDelay(retryDelay))
         } else {
             completion(.doNotRetry)
         }
     }
 }
+
+struct GenerationNotReadyError: Error {}

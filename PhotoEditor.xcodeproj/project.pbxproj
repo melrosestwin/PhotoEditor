@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB2E0BB02DC966DF000981A2 /* PrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2E0BAF2DC966DF000981A2 /* PrivacyView.swift */; };
+		BB2E0BB22DC96C44000981A2 /* TermsOfUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2E0BB12DC96C39000981A2 /* TermsOfUseView.swift */; };
 		ED426AA52D5D293500D92CB3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED426AA22D5D293500D92CB3 /* OnboardingView.swift */; };
 		ED426AA62D5D293500D92CB3 /* PhotoEditorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED426AA32D5D293500D92CB3 /* PhotoEditorApp.swift */; };
 		ED426AA82D5D293500D92CB3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED426AA12D5D293500D92CB3 /* Assets.xcassets */; };
@@ -78,6 +80,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB2E0BAF2DC966DF000981A2 /* PrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyView.swift; sourceTree = "<group>"; };
+		BB2E0BB12DC96C39000981A2 /* TermsOfUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfUseView.swift; sourceTree = "<group>"; };
 		ED426A8E2D5D284000D92CB3 /* PhotoEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED426AA12D5D293500D92CB3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ED426AA22D5D293500D92CB3 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -366,9 +370,11 @@
 		ED86865D2DAC2E7B00B41214 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				BB2E0BB12DC96C39000981A2 /* TermsOfUseView.swift */,
 				EDCF5C432DA5D4B400714026 /* Subscription */,
 				ED86865E2DAC2EA600B41214 /* SettingsView.swift */,
 				ED8686602DAC349B00B41214 /* LinksManager.swift */,
+				BB2E0BAF2DC966DF000981A2 /* PrivacyView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -546,6 +552,7 @@
 				ED426AF52D5D324A00D92CB3 /* DeviceInfo.swift in Sources */,
 				ED5ABF462D74EB0F0086AD82 /* RoundedCornerShape.swift in Sources */,
 				ED6135192D653423007C73E8 /* BrandSlider.swift in Sources */,
+				BB2E0BB02DC966DF000981A2 /* PrivacyView.swift in Sources */,
 				ED426AA52D5D293500D92CB3 /* OnboardingView.swift in Sources */,
 				ED426B012D5D3FEB00D92CB3 /* YellowButton.swift in Sources */,
 				ED92A7C92D6B81A400E661B2 /* CardLibraryView.swift in Sources */,
@@ -555,6 +562,7 @@
 				ED426AA62D5D293500D92CB3 /* PhotoEditorApp.swift in Sources */,
 				ED8382D02D628A9C006CAC70 /* TutorialTip.swift in Sources */,
 				ED92A7D02D6BC08500E661B2 /* UploadPhotoView.swift in Sources */,
+				BB2E0BB22DC96C44000981A2 /* TermsOfUseView.swift in Sources */,
 				ED92A7C52D6B784000E661B2 /* GenerationTextField.swift in Sources */,
 				EDCF5C4A2DA5D92200714026 /* ProductConstants.swift in Sources */,
 				ED6135172D653182007C73E8 /* EditorView.swift in Sources */,
@@ -692,6 +700,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -728,6 +737,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
